@@ -1,6 +1,5 @@
 # MindX_Book_ECommerce
 
-## Feature 1: Login
 1. Feature 1: Authorize
   - Us 1: Sign-up
     -  Email, password, username -> check DB có email chưa, username khác rỗng -> gửi ok hoặc no
