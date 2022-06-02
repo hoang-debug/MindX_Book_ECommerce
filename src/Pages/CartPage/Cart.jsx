@@ -1,0 +1,194 @@
+import { Box, Button, Divider, Grid, makeStyles, Paper, Typography } from "@material-ui/core";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { BASE_API, PrevChooseAddress } from "../../Services/Constants";
+import { CustomButton } from "../CustomComponent/CustomButton";
+import { axiosGet, axiosDelete, axiosPatch } from "../../Services/Ultils/axiosUtils";
+import { numberWithCommas } from "../../Services/Ultils/NumberUtils";
+import CartItem from "./CartItem";
+import RecommendItem from "./RecommendItem";
+import { common_variable } from "../common";
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: '100%',
+    height: '100%',
+    // backgroundColor: 'grey',
+    padding: theme.spacing(2),
+    boxSizing: 'border-box'
+  },
+  shoppingCart: {
+    backgroundColor: theme.palette.common.white
+  },
+  subTotal: {
+    backgroundColor: theme.palette.common.white,
+    width: 300
+  },
+  youMayLike: {
+    backgroundColor: theme.palette.common.white,
+    width: 300,
+    height: 'fit-content',
+    border: `1px solid ${theme.palette.grey[200]}`,
+    borderRadius: 5
+  },
+  rightGrid: {
+    height: '600px'
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: "center",
+    color: theme.palette.text.secondary
+  }
+}))
+
+const item = {
+  src: 'https://i2-prod.walesonline.co.uk/incoming/article6890072.ece/ALTERNATES/s615b/hp1.jpg',
+  title: 'Harry Potter',
+  author: 'JK Rowling',
+  coverType: 'Paper back',
+  price: '13.02',
+  maxAmount: 10
+}
+
+// const items = new Array(3).fill(item)
+
+const book = {
+  title: 'Harry Potter and the Philosopher Stone',
+  newprice: '$9.99',
+  oldprice: '$11.11',
+  src: 'https://i2-prod.walesonline.co.uk/incoming/article6890072.ece/ALTERNATES/s615b/hp1.jpg',
+  author: 'JK Rowling',
+  stars: '4.6',
+  votes: '20.000',
+}
+
+const booklist = Array(4).fill(book)
+
+const Cart = (props) => {
+  const classes = useStyles()
+  const navigate = useNavigate()
+
+  
+  const [cartInfo, setCartInfo] = useState({})
+  const [items, setItems] = useState([])
+  
+  const getCartItems = async () => {
+    let response = await axiosGet(`${BASE_API}/carts/active`, null, true)
+    console.log('cart items', response.data)
+    if (!response) return
+    setCartInfo(response.data)
+    setItems(response.data.items)
+  }
+  
+  useEffect(() => {
+    getCartItems()
+  }, [])
+  
+  const deleteItem = (id) => async (event) => {
+    let response = await axiosDelete(`${BASE_API}/cartitems/${id}`, null, true)
+    console.log(response)
+    getCartItems()
+  }
+  
+  const updateItem = async (id, amount) => {
+    let response = await axiosPatch(`${BASE_API}/cartitems/${id}`, {
+      "field_name": "quantity",
+      "value": `${amount}`
+    }, true)
+    console.log(response)
+    getCartItems()
+  }
+
+  const checkOut = () => {
+    navigate('/chon-dia-chi', {state: {prev: PrevChooseAddress.CHECK_OUT}})
+  }
+  
+  return (
+    <Box
+    direction="row"
+      className={classes.root}
+      display='flex'
+    >
+      {items.length === 0 &&
+        <Box className={classes.shoppingCart} height='fit-content' padding={2} boxSizing='border-box' width='100%'>
+          <Box display='flex' justifyContent='space-between' alignItems='flex-end' paddingRight={2} >
+            <Typography variant="h5" gutterBottom>Shopping Cart</Typography>
+            <Typography variant="body1" gutterBottom style={{ fontWeight: 400 }}>Price</Typography>
+          </Box>
+          <Divider />
+
+          <Box display='flex' flexDirection='column' alignItems='center' marginTop={4} paddingBottom={4}>
+            <Typography variant="h5">Bạn chưa có gì trong giỏ hàng</Typography>
+            <Box marginTop={3} />
+            <Link to='\home'>
+              <CustomButton variant="contained" backgroundColor='yellow'>Quay lại trang chủ</CustomButton>
+            </Link>
+          </Box>
+        </Box>
+      }
+      {items.length > 0 &&
+        <Box className={classes.shoppingCart} height='fit-content' padding={2} boxSizing='border-box' width='calc(100% - 348px - 16px)'>
+          <Box display='flex' justifyContent='space-between' alignItems='flex-end' paddingRight={2} >
+            <Typography variant="h5" gutterBottom>Shopping Cart</Typography>
+            <Typography variant="body1" gutterBottom style={{ fontWeight: 400 }}>Price</Typography>
+          </Box>
+          <Divider />
+          {items.map((item, index) => (
+            <CartItem
+              key={index}
+              _id={item._id}
+              authors={item.authors}
+              otype={item.otype}
+              price={item.price}
+              quantity={item.quantity}
+              src={item.thumb_url}
+              title={item.title}
+              deleteItem={deleteItem}
+              updateItem={updateItem}
+            />
+          ))}
+          <Box display='flex' justifyContent='flex-end' marginTop={2} paddingRight={2}>
+            <Typography variant="h6" style={{ fontWeight: 400 }}>{`Tổng (${items.length} sản phẩm):`} <b>{numberWithCommas(cartInfo.subtotal)}đ</b></Typography>
+          </Box>
+        </Box>
+      }
+      {items.length > 0 &&
+        <>
+          <Box marginRight={2} />
+          <Box className={classes.rightGrid} maxWidth='348px'>
+            <Box className={classes.subTotal} height='80px' display='flex' flexDirection='column' justifyContent='space-between' padding={3}>
+              <Typography variant="body1" style={{ fontWeight: 400 }}>{`Tổng (${items.length} sản phẩm):`} <b>{numberWithCommas(cartInfo.subtotal)}đ</b></Typography>
+              <Box boxSizing='border-box' width="100%">
+                {/* <Button fullWidth variant="contained" color='primary' style={{ backgroundColor: '#FFD714' }}>
+              <span style={{ color: '#000' }}>Thanh toán</span>
+            </Button> */}
+                <CustomButton fullWidth variant="contained" backgroundColor='yellow' onClick={checkOut}>Thanh toán</CustomButton>
+              </Box>
+            </Box>
+            <Box className={classes.youMayLike} height={500} padding={2} marginTop={2} >
+              <Typography variant="h5" style={{ fontWeight: 400 }}>Bạn có thể thích</Typography>
+              <Box>
+                {booklist.map((data, index) => (
+                  <RecommendItem
+                    key={index}
+                    title={data.title}
+                    newprice={data.newprice}
+                    oldprice={data.oldprice}
+                    src={data.src}
+                    author={data.author}
+                    stars={data.stars}
+                    votes={data.votes}
+                  ></RecommendItem>
+                ))}
+              </Box>
+
+            </Box>
+
+          </Box>
+        </>
+      }
+    </Box>
+  )
+}
+
+export default Cart
