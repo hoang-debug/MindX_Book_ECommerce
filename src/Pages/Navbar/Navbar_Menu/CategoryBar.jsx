@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { BASE_API } from "../../../Services/Constants";
 import { axiosGet } from "../../../Services/Ultils/axiosUtils";
-import { fetchData } from "../../../Services/Ultils/FetchData";
 
 const useStyles = makeStyles(theme => ({
   bar: {

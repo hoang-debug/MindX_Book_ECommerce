@@ -126,7 +126,7 @@ const PriceBox = ({ buyOptions, buyOptionIndex, smallImages, bigImages }) => {
         display='flex'
         justifyContent='space-between'
       >
-        <Typography component='div' variant='body2'>{optionNames[buyOptionIndex]}</Typography>
+        <Typography component='div' variant='body2'>{}</Typography>
         <Box
           display='flex'
           flexDirection='column'
