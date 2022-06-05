@@ -55,6 +55,14 @@ const App = () => {
     common_variable.signedIn = signedIn
   }, [signedIn])
 
+  useEffect(() => {
+    const getBooks = async () => {
+      let response = await axiosGet('https://book-ecommerce-be.herokuapp.com/api/books', null, false)
+      console.log('get books heroku', response)
+
+    }
+    getBooks()
+  }, [])
 
   return (
     <div className={classes.app}>

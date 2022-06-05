@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.common.white,
     padding: theme.spacing(3),
     paddingLeft: theme.spacing(6),
-    overflow: 'scroll'
+    // overflow: 'scroll'
   },
   exitIcon: {
     position: 'absolute',
@@ -103,7 +103,7 @@ const MenuSach = (props) => {
     const cv2 = response.data
     // console.log('catev2', cv2)
     setCategoriesV2(cv2)
-    onClickCategoryV2(categoriesV2[0]._id)
+    onClickCategoryV2(cv2[0]._id)
   }
 
   useEffect(() => {
@@ -132,7 +132,7 @@ const MenuSach = (props) => {
           <div className={classes.menu}>
             <Clear className={classes.exitIcon} onClick={props.handleCloseMenu}></Clear>
             <Grid container className={classes.container}>
-              <Grid item xs={2} className={classes.leftMenu}>
+              {/* <Grid item xs={2} className={classes.leftMenu}>
                 {categoriesV1.map((cv1, index) => (
                   <Button
                     key={index}
@@ -145,8 +145,9 @@ const MenuSach = (props) => {
                     </Typography>
                   </Button>
                 ))}
-              </Grid>
-              <Grid item xs={10} className={classes.rightMenu}>
+              </Grid> */}
+              <Grid item xs={1}/>
+              <Grid item xs={11} className={classes.rightMenu}>
                 <Grid container className={classes.categoryContainer} direction='column'>
                   {categoriesV2.map((cv2, index) => (
                     <Grid item xs={1} key={cv2._id} className={classes.categoryWrapper}>
