@@ -14,6 +14,7 @@ import ConfirmPage from "./Pages/ConfirmPage/ConfirmPage"
 import { BASE_API } from "./Services/Constants"
 import { axiosGet } from "./Services/Ultils/axiosUtils"
 import { common_variable } from "./Pages/common"
+import Login from "./Pages/Signin/CustomSignIn"
 
 const useStyles = makeStyles((theme) => ({
   app: {
@@ -76,7 +77,8 @@ const App = () => {
         <Route path="/chon-dia-chi" element={<ChooseAddress />} />
         <Route path="/thanh-toan" element={<ThanhToan />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/signin" element={<Signin _setUserInfo={_setUserInfo} signedIn={signedIn} />} />
+        {/* <Route path="/signin" element={<Signin _setUserInfo={_setUserInfo} signedIn={signedIn} />} /> */}
+        <Route path="/signin" element={<Login />} />
         <Route path="/confirm" element={<ConfirmPage />} />
       </Routes>
     </div>
