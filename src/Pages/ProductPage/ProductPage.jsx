@@ -11,7 +11,7 @@ import CustomerRatings from "./CustomerRatings";
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { axiosGet } from '../../Services/Ultils/axiosUtils'
-import { BASE_API } from "../../Services/Constants";
+import { BASE_API, HEROKU_API } from "../../Services/Constants";
 import { convertBlockToLineRow } from "../BookPage/useBookSearch";
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,6 +26,24 @@ let slider_item = {
   details: [
     '10 days left'
   ]
+}
+
+class Specs {
+  name
+  code
+  value
+  constructor(name, code, value) {
+    this.name = name
+    this.code = code
+    this.value = value
+  }
+  getObject() {
+    return ({
+      name: this.name,
+      code: this.code,
+      value: this.value
+    })
+  }
 }
 
 let slider_items = new Array(10).fill(slider_item)
@@ -54,13 +72,31 @@ const ProductPage = () => {
   useEffect(() => {
     const getBookDetails = async (id) => {
       console.log('book id:', id)
-      let response = await axiosGet(`${BASE_API}/pages/book/${id}/details`)
+      let response = await axiosGet(`${HEROKU_API}/books/${id}`)
+      let data = response.data
+      let details = {
+        images: data.imageURL,
+        authors: [data.author],
+        desc: data.description,
+        quantity_sold: null,
+        rating: data.stars.averageStars,
+        review_count: data.stars.totalAmountVotes,
+        title: data.name,
+        specs: [{
+          attributes: [
+            new Specs('Nhà xuất bản', 'publisher', data.publishers).getObject(),
+            new Specs('Ngày xuất bản', 'publication_date', null).getObject(),
+            new Specs('Số trang', 'number_of_page', null).getObject(),
+            new Specs('Nhà sách', 'manufacturer', null).getObject(),
+          ]
+        }],
+        price: data.price
+      }
       console.log('book data:', response.data)
-      response.data.buy_options.forEach((option) => { option.quantity = option.quantity || 1 })
       setData(response.data)
-      setDetails(response.data.book)
-      setSimilarBuy(convertBlockToLineRow(response.data.similar_buy_block).getObject())
-      setSimilarView(convertBlockToLineRow(response.data.similar_view_block).getObject())
+      setDetails(details)
+      // setSimilarBuy(convertBlockToLineRow(response.data.similar_buy_block).getObject())
+      // setSimilarView(convertBlockToLineRow(response.data.similar_view_block).getObject())
     }
     getBookDetails(id)
   }, [id])
@@ -86,11 +122,9 @@ const ProductPage = () => {
           display='flex'
           justifyContent='space-between'
           boxSizing='border-box'
-        // paddingRight='5%'
         >
           <BookImage
-            bigImages={details.images.map(image => image.large_url)}
-            smallImages={details.images.map(image => image.thumb_url)}
+            smallImages={details.images}
           />
           <Box marginLeft={2} />
           <BookDetails
@@ -105,15 +139,13 @@ const ProductPage = () => {
             specs={details.specs}
             buyOptionIndex={buyOptionIndex}
             clickBuyOption={clickBuyOption}
-            buyOptions={data.buy_options}
+            // buyOptions={data.buy_options}
           //.filter(option => option.price)
           />
           <Box marginLeft={2} />
           <PriceBox
-            buyOptionIndex={buyOptionIndex}
-            buyOptions={data.buy_options}
-            bigImages={details.images.map(image => image.large_url)}
-            smallImages={details.images.map(image => image.thumb_url)}
+            price={details.price}
+            smallImages={details.images}
           />
 
         </Box>

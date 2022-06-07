@@ -1,7 +1,6 @@
 import { Box, Dialog, Grid, IconButton, makeStyles, Typography } from "@material-ui/core"
 import { Clear } from "@material-ui/icons"
 import { useEffect, useState } from "react"
-import { BASE_FILE } from "../../Services/Constants"
 
 const useStyles = makeStyles((theme) => ({
   halfImage: {
@@ -38,22 +37,14 @@ const useStyles = makeStyles((theme) => ({
 
 }))
 
-const smallimages = [
-  'https://images-na.ssl-images-amazon.com/images/I/81PiNiKPESL.jpg',
-  'https://images-na.ssl-images-amazon.com/images/I/61m1Vxw8tiL.jpg',
-  'https://images-na.ssl-images-amazon.com/images/I/71Pt7z-Dt6L.jpg',
-  'https://images-na.ssl-images-amazon.com/images/I/81a4PaoziAL.jpg',
-
-]
-
-const SeeAllImage = ({ bigImages, smallImages }) => {
+const SeeAllImage = ({ smallImages }) => {
   const classes = useStyles()
   const [openDialog, setOpenDialog] = useState(false)
   const [imgIndex, setImgIndex] = useState(0)
   const [bigImg, setBigImg] = useState(null)
 
   useEffect(() => {
-    setBigImg(`${BASE_FILE}/${bigImages[imgIndex]}`)
+    setBigImg(smallImages[imgIndex])
   }, [imgIndex])
 
   const onClickImage = (index) => (e) => {
@@ -78,7 +69,7 @@ const SeeAllImage = ({ bigImages, smallImages }) => {
       >
         {smallImages.map((img, index) => (
           <Box key={index} minWidth='75px' width='75px' boxSizing='border-box' paddingRight='2px'>
-            <img key={index} className={classes.halfImage} src={`${BASE_FILE}/${img}`} />
+            <img className={classes.halfImage} src={img} />
           </Box>
         ))}
       </Box>
@@ -145,7 +136,7 @@ const SeeAllImage = ({ bigImages, smallImages }) => {
             >
               {smallImages.map((img, index) => (
                 <Box key={index} width='64px' height='64px' paddingLeft='5px' paddingBottom='5px'>
-                  <img key={index} className={index === imgIndex ? classes.smallImageActive : classes.smallImage} src={`${BASE_FILE}/${img}`} onClick={onClickImage(index)} />
+                  <img className={index === imgIndex ? classes.smallImageActive : classes.smallImage} src={img} onClick={onClickImage(index)} />
                 </Box>
               ))}
             </Box>

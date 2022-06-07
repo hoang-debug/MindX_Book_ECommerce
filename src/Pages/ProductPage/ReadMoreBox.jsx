@@ -4,7 +4,7 @@ import { useState } from "react"
 
 const useStyles = makeStyles((theme) => ({
   readmore: {
-    height: '200px',
+    height: '100px',
     overflow: 'hidden',
     paddingTop: theme.spacing(1)
   },
@@ -28,16 +28,14 @@ const ReadMoreBox = ({ content }) => {
         </Typography>
       </Box>
       {/* <Box marginTop={3} /> */}
-
-      <Box 
+      <Box
         display={readmore ? 'none' : 'block'}
         position='absolute'
-        top='160px'
+        top='50px'
         height='50px'
         width='100%'
-        style={{background: 'linear-gradient(to bottom,rgba(255,255,255,0),#fff)'}}
+        style={{ background: 'linear-gradient(to bottom,rgba(255,255,255,0),#fff)' }}
       />
-
       <Box
         display='flex'
         alignItems='center'
@@ -48,6 +46,7 @@ const ReadMoreBox = ({ content }) => {
         <Box marginLeft={1} />
         <Typography component='div' color='primary' variant="body2">{readmore ? 'Thu gọn' : 'Đọc thêm'}</Typography>
       </Box>
+      
     </Box>
   )
 }

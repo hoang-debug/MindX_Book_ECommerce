@@ -37,16 +37,12 @@ const smallimages = [
   'https://images-na.ssl-images-amazon.com/images/I/81a4PaoziAL.jpg'
 ]
 
-const optionNames = [
-  'Mới', 'Cũ như mới', 'Cũ nhưng rất tốt', 'Cũ nhưng tốt', 'Cũ dùng được'
-]
-
 const calcPercent = (num1, num2) => {
   if (!num1 || !num2) return null
   return (100 - num1 / num2 * 100).toFixed(0)
 }
 
-const PriceBox = ({ buyOptions, buyOptionIndex, smallImages, bigImages }) => {
+const PriceBox = ({ smallImages, price }) => {
   const classes = useStyles()
   const [amount, setAmount] = useState(1)
   const [buyable, setBuyable] = useState(false)
@@ -75,22 +71,22 @@ const PriceBox = ({ buyOptions, buyOptionIndex, smallImages, bigImages }) => {
   const navigate = useNavigate()
 
   const addToCart = async () => {
-    if (!common_variable.signedIn) {
-      navigate('/signin', { state: { prev: window.location.pathname } })
-      return
-    }
+    // if (!common_variable.signedIn) {
+    //   navigate('/signin', { state: { prev: window.location.pathname } })
+    //   return
+    // }
 
-    let response = await axiosPost(`${BASE_API}/cartitems`, {
-      book_id: buyOptions[buyOptionIndex].book_id,
-      otype: buyOptions[buyOptionIndex].otype,
-      price: buyOptions[buyOptionIndex].price,
-      quantity: amount
-    }, true)
-    console.log('add to cart', response)
+    // let response = await axiosPost(`${BASE_API}/cartitems`, {
+    //   book_id: buyOptions[buyOptionIndex].book_id,
+    //   otype: buyOptions[buyOptionIndex].otype,
+    //   price: buyOptions[buyOptionIndex].price,
+    //   quantity: amount
+    // }, true)
+    // console.log('add to cart', response)
     navigate('/confirm', {
       state: {
         prev: 'product-page',
-        src: smallimages[0],
+        src: smallImages[0],
       }
     })
   }
@@ -126,42 +122,22 @@ const PriceBox = ({ buyOptions, buyOptionIndex, smallImages, bigImages }) => {
         display='flex'
         justifyContent='space-between'
       >
-        <Typography component='div' variant='body2'>{}</Typography>
-        <Box
-          display='flex'
-          flexDirection='column'
-          alignItems='flex-end'
-          width='fit-content'
-        >
-          <Typography component='div' color='secondary' variant='body2'><b>{numberWithCommas(buyOptions[buyOptionIndex].price)}đ</b></Typography>
-          {buyOptions[buyOptionIndex].price !== buyOptions[buyOptionIndex].original_price &&
-            <>
-              <Box
-                display='flex'
-                justifyContent='space-between'
-                width='100%'
-              >
-                <Typography component='div' variant='body2'>Giá bìa:&ensp;</Typography>
-                <Typography component='div' style={{ textDecoration: 'line-through' }} variant='body2'>{numberWithCommas(buyOptions[buyOptionIndex].original_price)}đ</Typography>
-              </Box>
-              <Typography component='div' style={{ marginRight: '10px' }} variant='body2'>(-{calcPercent(buyOptions[buyOptionIndex].price, buyOptions[buyOptionIndex].original_price)}%)</Typography>
-            </>
-          }
-        </Box>
+        <Typography>Giá</Typography>
+        <Typography color="secondary">{numberWithCommas(price)}đ</Typography>
       </Box>
 
+      <Box marginTop={4}/>
+
       <SeeAllImage
-        bigImages={bigImages}
         smallImages={smallImages}
       />
 
       <Box paddingTop={0.5} paddingBottom={1.5}><Divider /></Box>
 
-      <Typography color="textPrimary" variant='body2'>{buyOptions[buyOptionIndex].odesc}</Typography>
 
       <Box marginTop={1}></Box>
-      <Typography
-        style={{ color: (buyOptions[buyOptionIndex].quantity > 0) ? 'green' : 'red', fontWeight: '500' }} variant="h6">{(buyOptions[buyOptionIndex].quantity > 0) ? 'Còn hàng' : 'Hết hàng'}</Typography>
+      {/* <Typography
+        style={{ color: (buyOptions[buyOptionIndex].quantity > 0) ? 'green' : 'red', fontWeight: '500' }} variant="h6">{(buyOptions[buyOptionIndex].quantity > 0) ? 'Còn hàng' : 'Hết hàng'}</Typography> */}
 
       <Box
         display='flex'

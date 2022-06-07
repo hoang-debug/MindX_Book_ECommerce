@@ -299,7 +299,7 @@ const Navbar = (props) => {
                     // <Typography variant="body2" className={isActive ? classes.linkActive : classes.linkInActive}>
                     //   Giỏ hàng
                     // </Typography>
-                    <Badge badgeContent={4} color="secondary">
+                    <Badge badgeContent={4} color="secondary" overlap="rectangular">
                       <ShoppingBasket />
                     </Badge>
                   )}

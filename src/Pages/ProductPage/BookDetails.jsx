@@ -21,28 +21,6 @@ const useStyles = makeStyles((theme) => ({
     width: '24%',
     height: '50px',
     objectPosition: 'top'
-  },
-  typeBoxActive: {
-    border: '1px solid #e7a976',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: '#fdf8f3',
-    cursor: 'pointer'
-  },
-  typeBoxInactive: {
-    border: `1px solid ${theme.palette.grey[400]}`,
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: theme.palette.common.white,
-    cursor: 'pointer'
-  },
-  typeBoxWrapper: {
-    padding: '5px',
-    boxSizing: 'border-box',
-    marginBottom: '10px',
-  },
-  typeBoxDisabled: {
-    border: `1px dashed ${theme.palette.grey[400]}`,
-    cursor: 'auto',
-    color: theme.palette.grey[400]
   }
 }))
 
@@ -98,7 +76,7 @@ const responsive = {
   }
 }
 
-const BookDetails = ({ authors, desc, quantity_sold, rating, review_count, title, specs, buyOptionIndex, clickBuyOption, buyOptions }) => {
+const BookDetails = ({ authors, desc, quantity_sold, rating, review_count, title, specs}) => {
   const classes = useStyles()
 
   return (
@@ -148,8 +126,8 @@ const BookDetails = ({ authors, desc, quantity_sold, rating, review_count, title
               <Box marginLeft={1} />
               <Typography variant="body2" color='textSecondary'>Đánh giá</Typography>
               <Box marginLeft={2} />
-              <Divider flexItem orientation="vertical" />
-              <Box marginLeft={2} />
+              {/* <Divider flexItem orientation="vertical" />
+              <Box marginLeft={2} /> */}
             </>
           }
           {!!quantity_sold &&
@@ -167,54 +145,6 @@ const BookDetails = ({ authors, desc, quantity_sold, rating, review_count, title
       <Box marginTop={2} />
       <Divider />
       <Box marginTop={3} />
-
-      {/* <Box
-        display='flex'
-        justifyContent='flex-start'
-        flexWrap='wrap'
-      >
-        {buyOptions.map((option, index) => (
-          <Box
-            key={index}
-            onClick={isNumber(option.price) ? clickBuyOption(index) : null}
-            // className={buyOptionIndex === index ? classes.typeBoxActive : classes.typeBoxInactive}
-            className={classNames({
-              [classes.typeBoxActive] : buyOptionIndex === index,
-              [classes.typeBoxInactive] : buyOptionIndex !== index,
-              [classes.typeBoxDisabled] : !isNumber(option.price)
-            })}
-            height='70px'
-            boxSizing='border-box'
-            display='flex'
-            flexDirection='column'
-            justifyContent='center'
-            padding={1.5}
-            paddingX={2}
-            flexGrow={1}
-            maxWidth='150px'
-            minWidth='150px'
-            marginLeft={1}
-            marginBottom={1}
-          >
-            <Typography
-              component='div'
-              style={{ fontWeight: buyOptionIndex === index ? 'bold' : 'normal', fontSize: '14px' }}
-            >
-              {choices[option.otype]}
-            </Typography>
-            <Typography
-              component='div'
-              style={{
-                fontWeight: buyOptionIndex === index ? 'bold' : 'normal',
-                color: buyOptionIndex === index ? '#a3331a' : 'inherit',
-                fontSize: '14px'
-              }}
-            >
-              {numberWithCommas(option.price) || '- '}đ
-            </Typography>
-          </Box>
-        ))}
-      </Box> */}
 
       <Box marginTop={2} />
 

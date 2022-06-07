@@ -27,7 +27,7 @@ const smallimages = [
 
 // const smallimages = new Array(4).fill(smallimage)
 
-const BookImage = ({bigImages, smallImages}) => {
+const BookImage = ({smallImages}) => {
   const classes = useStyles()
 
   return (
@@ -40,9 +40,8 @@ const BookImage = ({bigImages, smallImages}) => {
       justifyContent='space-between'
       alignItems='center'
     >
-      <img className={classes.bigImage} src={`${BASE_FILE}/${bigImages[0]}`} />
+      <img className={classes.bigImage} src={smallImages[0]} />
       <SeeAllImage 
-        bigImages={bigImages}
         smallImages={smallImages}
       />
 
