@@ -2,6 +2,7 @@ import { Box, Divider, makeStyles, Typography } from "@material-ui/core";
 import React from "react"
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
+import { useNavigate } from "react-router-dom";
 import Book2 from "../../BookPage/Book2";
 import './ItemSlider.css'
 import SliderItem from "./SliderItem";
@@ -77,6 +78,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ItemSlider = ({label, link, items, maxWidth = '1480px'}) => {
   const classes = useStyles()
+  const navigate = useNavigate()
   return (
     <div className={classes.root} style={{maxWidth: maxWidth}}>
       <div className={classes.header}>
@@ -88,7 +90,7 @@ const ItemSlider = ({label, link, items, maxWidth = '1480px'}) => {
             variant="body2"
             color="primary"
             style={{ cursor: 'pointer' }}
-            onClick={() => { console.log(link); window.open(link) }}
+            onClick={() => { navigate(link) }}
             className={classes.seeMore}
           >
             See more {'>'}

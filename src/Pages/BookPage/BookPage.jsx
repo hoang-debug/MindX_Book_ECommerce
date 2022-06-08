@@ -1,19 +1,19 @@
 import { Box, makeStyles, Typography } from "@material-ui/core";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useParams, useSearchParams } from "react-router-dom";
-import { BASE_API, BASE_FILE } from "../../Services/Constants";
+import { BASE_API, BASE_FILE, HEROKU_API } from "../../Services/Constants";
 import ItemSlider from "../HomePage/Slider/ItemSlider";
 import Loading from "../Loading";
 import { axiosGet } from "../../Services/Ultils/axiosUtils";
 import Banner from "./Banner";
 import BookListGrid from "./BookListGrid";
-import useBookSearch from "./useBookSearch";
+import { GridItem } from "./useBookSearch";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
-    paddingTop: theme.spacing(15),
+    paddingTop: theme.spacing(8),
     backgroundColor: '#f5f5f5',
     width: '100%',
     alignItems: 'center'
@@ -22,53 +22,72 @@ const useStyles = makeStyles((theme) => ({
 
 const BookPage = () => {
   const classes = useStyles()
-  const [banner, setBanner] = useState({ img_url: '', link: '', show_start: '', show_end: '', _id: '' })
-  const [offset, setOffset] = useState(0)
-
-  let { cateIdV2 } = useParams()
-  let [searchParams] = useSearchParams()
-  let cateIdV3 = searchParams.get('cateIdV3')
-  let cateId = cateIdV3 || cateIdV2
-
+  const [gridData, setGridData] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
+  const { idCategory } = useParams()
+  const [gridLabel, setGridLabel] = useState('')
   useEffect(() => {
-    setOffset(0)
-  }, [cateId])
+    if (!idCategory) return
+    setLoading(true)
 
-  useEffect(() => {
-    const getBanner = async () => {
-      const response = await axiosGet(`${BASE_API}/pages/category/bads/filter?status=active`)
-      setBanner(response.data[0])
-    }
-    getBanner()
-  }, [])
-
-  const { loading, error, lineData, gridData, hasMore, gridLabel } = useBookSearch(offset)
-
-  const observer = useRef()
-
-  const lastElementRef = useCallback(node => {
-    if (loading) return
-    if (observer.current) observer.current.disconnect()
-    observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMore) {
-        setOffset(prev => prev + 1)
-        console.log('visible')
+    const getCategoriesV2 = async () => {
+      const response = await axiosGet(`${HEROKU_API}/category`)
+      if (!response) {
+        setError(true)
+        return null
       }
-    })
-    if (node) observer.current.observe(node)
-  }, [loading, hasMore])
+      const cv2 = response.data
+      return cv2
+    }
+
+    const getBooks = async () => {
+      const response = await axiosGet(`${HEROKU_API}/books`)
+      if (!response) {
+        setError(true)
+        return
+      }
+      const books = response.data
+      console.log('heroku book', books)
+
+      let gridResult = []
+      const categories = await getCategoriesV2()
+      if (!categories) {
+        setError(true)
+        return
+      }
+      let gridLabel = categories.find(cate => cate.idCategory === idCategory).name
+      let filtered_books = books.filter(book => book.category === idCategory)
+      console.log('filter', filtered_books)
+      filtered_books.map(book => {
+        let gridItem = new GridItem(
+          null,
+          book._id,
+          book.name,
+          null,
+          book.price,
+          book.imageURL[0],
+          book.author,
+          book.stars.averageStars,
+          book.totalAmountVotes,
+          null,
+          null
+        )
+        gridResult.push(gridItem.getObject())
+      })
+      console.log('grid', gridResult)
+      setGridLabel(gridLabel)
+      setGridData(gridResult)
+      setLoading(false)
+    }
+
+    getBooks()
+  }, [idCategory])
 
   return (
     <div className={classes.root}>
-      <Banner
-        img_url={banner.img_url}
-        link={banner.link}
-        show_start={banner.show_start}
-        show_end={banner.show_end}
-        _id={banner._id}
-      />
 
-      {lineData.map((row, index) => {
+      {/* {lineData.map((row, index) => {
         return (
           <Fragment key={index}>
             <Box marginTop={2} />
@@ -80,7 +99,7 @@ const BookPage = () => {
             />
           </Fragment>
         )
-      })}
+      })} */}
 
       <BookListGrid
         listname={gridLabel}
@@ -88,9 +107,8 @@ const BookPage = () => {
         items={gridData}
       />
 
-      <div ref={lastElementRef} style={{ height: '1px', width: '1px' }} />
-      {loading && <Loading />}
-      {error && <Typography color="secondary">Lỗi khi tải trang</Typography>}
+      {!error && loading && <Loading />}
+      {error && <Typography variant='h5' color='secondary'>Lỗi khi tải trang :(</Typography>}
     </div>
   )
 

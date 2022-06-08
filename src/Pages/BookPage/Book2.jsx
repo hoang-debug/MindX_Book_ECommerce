@@ -47,7 +47,7 @@ const Book2 = (props) => {
 
   return (
     <Card className={classes.root} elevation={props.elevation}>
-      <Link to={`/product/${props.link.replace('books/', '')}`}>
+      <Link to={`/product/${props.link}`}>
         <CardActionArea className={classes.cardActionArea}>
           <CardMedia
             className={classes.media}
