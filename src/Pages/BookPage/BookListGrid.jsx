@@ -50,7 +50,8 @@ const BookListGrid = (props) => {
     <div className={classes.root}>
       <Box className={classes.header} alignSelf={props.namePosition}>
         <Typography gutterBottom variant="h5">
-          {props.listname}
+          {props.items.length > 0 ? props.listname : `Không có ${props.listname} nào :(`}
+        
         </Typography>
       </Box>
       <div className={classes.list}>

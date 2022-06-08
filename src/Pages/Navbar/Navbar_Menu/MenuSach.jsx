@@ -3,7 +3,7 @@ import { ChevronRight, Clear } from "@material-ui/icons";
 import { useTheme } from "@material-ui/styles";
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { BASE_API } from "../../../Services/Constants";
+import { BASE_API, HEROKU_API } from "../../../Services/Constants";
 import { axiosGet } from "../../../Services/Ultils/axiosUtils";
 
 const useStyles = makeStyles((theme) => ({
@@ -74,14 +74,12 @@ const useStyles = makeStyles((theme) => ({
 
 const MenuSach = (props) => {
   const classes = useStyles()
-  const [categoriesV1, setCategoriesV1] = useState([])
   const [categoriesV2, setCategoriesV2] = useState([])
-  const [cateIdV1, setCateIdV1] = useState('')
 
-  const onClickCategoryV1 = (idv1) => (event) => {
-    setCateIdV1(idv1)
-    getCategoriesV2(idv1)
-  }
+  // const onClickCategoryV1 = (idv1) => (event) => {
+  //   setCateIdV1(idv1)
+  //   getCategoriesV2(idv1)
+  // }
 
   const [cateIdV2, setCateIdV2] = useState('')
 
@@ -90,24 +88,26 @@ const MenuSach = (props) => {
     props.handleCloseMenu()
   }
 
-  const getCategoriesV1 = async () => {
-    const response = await axiosGet(`${BASE_API}/categories`)
-    const cv1 = response.data
-    setCategoriesV1(cv1)
-    setCateIdV1(cv1[0]._id)
-    getCategoriesV2(cv1[0]._id)
-  }
+  // const getCategoriesV1 = async () => {
+  //   const response = await axiosGet(`${BASE_API}/categories`)
+  //   const cv1 = response.data
+  //   console.log('v1', cv1)
+  //   setCategoriesV1(cv1)
+  //   setCateIdV1(cv1[0]._id)
+  //   getCategoriesV2(cv1[0]._id)
+  // }
 
-  const getCategoriesV2 = async (parent_id) => {
-    const response = await axiosGet(`${BASE_API}/categories/${parent_id}`)
+  const getCategoriesV2 = async () => {
+    const response = await axiosGet(`${HEROKU_API}/category`)
     const cv2 = response.data
-    // console.log('catev2', cv2)
+    console.log('catev2', cv2)
     setCategoriesV2(cv2)
-    onClickCategoryV2(cv2[0]._id)
+    onClickCategoryV2(cv2[0].idCategory)
   }
 
   useEffect(() => {
-    getCategoriesV1()
+    // getCategoriesV1()
+    getCategoriesV2()
   }, [])
 
   const path = useLocation().pathname
@@ -151,11 +151,11 @@ const MenuSach = (props) => {
                 <Grid container className={classes.categoryContainer} direction='column'>
                   {categoriesV2.map((cv2, index) => (
                     <Grid item xs={1} key={cv2._id} className={classes.categoryWrapper}>
-                      <Link key={index} to={`/book-page/${cv2._id}`}>
+                      <Link key={index} to={`/book-page/${cv2.idCategory}`}>
                         <Typography
                           variant="body2"
-                          className={cv2._id === cateIdV2 ? classes.linkActive : classes.linkInActive}
-                          onClick={onClickCategoryV2(cv2._id)}
+                          className={cv2.idCategory === cateIdV2 ? classes.linkActive : classes.linkInActive}
+                          onClick={onClickCategoryV2(cv2.idCategory)}
                         >
                           {cv2.name}
                         </Typography>

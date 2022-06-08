@@ -81,7 +81,7 @@ export default function useBookSearch(offset) {
 }
 
 
-class LineRow {
+export class LineRow {
   label = ''
   items = []
   link = ''
@@ -104,7 +104,7 @@ class LineRow {
   }
 }
 
-class LineItem {
+export class LineItem {
   type = ''
   img_url = ''
   link = ''
@@ -116,7 +116,7 @@ class LineItem {
   rating = 0
   constructor(type, src, link, old_price, sale_price, sale_end, sale_start, label, rating) {
     this.type = type
-    this.img_url = `${BASE_FILE}/${src}`
+    this.img_url = `${src}`
     this.link = link
     this.old_price = old_price
     this.sale_price = sale_price
@@ -141,7 +141,7 @@ class LineItem {
   }
 }
 
-class GridItem {
+export class GridItem {
   id
   link
   label
@@ -160,7 +160,7 @@ class GridItem {
     this.label = label
     this.sale_price = sale_price
     this.old_price = old_price
-    this.img_url = `${BASE_FILE}/${img_url}`
+    this.img_url = `${img_url}`
     this.author = author
     this.rating = rating
     this.votes = votes

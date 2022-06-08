@@ -15,6 +15,7 @@ import { BASE_API } from "./Services/Constants"
 import { axiosGet } from "./Services/Ultils/axiosUtils"
 import { common_variable } from "./Pages/common"
 import Login from "./Pages/Signin/CustomSignIn"
+import HomePage from './Pages/HomePage/HomePage'
 
 const useStyles = makeStyles((theme) => ({
   app: {
@@ -56,21 +57,21 @@ const App = () => {
     common_variable.signedIn = signedIn
   }, [signedIn])
 
-  useEffect(() => {
-    const getBooks = async () => {
-      let response = await axiosGet('https://book-ecommerce-be.herokuapp.com/api/books', null, false)
-      console.log('get books heroku', response)
+  // useEffect(() => {
+  //   const getBooks = async () => {
+  //     let response = await axiosGet('https://book-ecommerce-be.herokuapp.com/api/books', null, false)
+  //     console.log('get books heroku', response)
 
-    }
-    getBooks()
-  }, [])
+  //   }
+  //   getBooks()
+  // }, [])
 
   return (
     <div className={classes.app}>
       <Navbar signedIn={signedIn} />
       <Routes>
-        <Route path="*" element={<Navigate to="/book-page/62822a57289eae04f259880e" replace />} />
-        <Route path="/book-page/:cateIdV2" element={<BookPage />} />
+        <Route path="*" element={<HomePage/>} />
+        <Route path="/book-page/:idCategory" element={<BookPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/product/:id" element={<ProductPage />} />
         <Route path="/search" element={<SearchResult />} />
