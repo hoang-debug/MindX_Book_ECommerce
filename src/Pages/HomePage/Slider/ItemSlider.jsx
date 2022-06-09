@@ -93,7 +93,7 @@ const ItemSlider = ({label, link, items, maxWidth = '1480px'}) => {
             onClick={() => { navigate(link) }}
             className={classes.seeMore}
           >
-            See more {'>'}
+            Xem thêm {'>'}
           </Typography>
         )}
       </div>

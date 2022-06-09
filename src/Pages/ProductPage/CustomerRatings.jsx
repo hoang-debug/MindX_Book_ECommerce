@@ -36,7 +36,7 @@ const CustomerRatings = (props) => {
 
       <Box marginTop={2} />
 
-      {props.ratings.map((rating, index) => (
+      {/* {props.ratings.map((rating, index) => (
         <Grid container alignItems="center" spacing={2} key={index}>
           <Grid item >
             <Typography color="primary" component='div' variant="body2">{5 - index}&nbsp;sao</Typography>
@@ -48,7 +48,7 @@ const CustomerRatings = (props) => {
             <Typography color="primary" component='div' variant="body2">{rating}%</Typography>
           </Grid>
         </Grid>
-      ))}
+      ))} */}
 
       <Box marginTop={4} marginBottom={3}><Divider /></Box>
 

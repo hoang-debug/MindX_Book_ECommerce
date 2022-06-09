@@ -94,6 +94,7 @@ const HomePage = () => {
       })}
 
       {!error && loading && <Loading/>}
+      <Box marginTop={4}/>
       {error && <Typography variant='h5' color='secondary'>Lỗi khi tải trang :(</Typography>}
     </div>
   )

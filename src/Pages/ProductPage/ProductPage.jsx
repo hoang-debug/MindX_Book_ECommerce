@@ -8,11 +8,12 @@ import ItemSlider from "../HomePage/Slider/ItemSlider";
 import CustomerReviews from "./CustomerRatings";
 import Review from "./Review";
 import CustomerRatings from "./CustomerRatings";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { axiosGet } from '../../Services/Ultils/axiosUtils'
 import { BASE_API, HEROKU_API } from "../../Services/Constants";
-import { convertBlockToLineRow } from "../BookPage/useBookSearch";
+import { convertBlockToLineRow, LineItem, LineRow } from "../BookPage/useBookSearch";
+import { numberWithCommas } from "../../Services/Ultils/NumberUtils";
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.common.white
@@ -53,23 +54,27 @@ const ProductPage = () => {
   const [data, setData] = useState(null)
   const [details, setDetails] = useState(null)
   const [buyOptionIndex, setBuyOptionIndex] = useState(0)
-  const [similarBuy, setSimilarBuy] = useState(null)
-  const [similarView, setSimilarView] = useState(null)
-
+  const [sameBooks, setSameBooks] = useState(null)
+  const [comments, setComments] = useState([])
   let { id } = useParams()
 
-  let [searchParams] = useSearchParams()
-  let buy_option = searchParams.get('buy_option')
+  // let [searchParams] = useSearchParams()
+  // let buy_option = searchParams.get('buy_option')
 
   // console.log('render')
 
-  useEffect(() => {
-    if (!buy_option) return
-    console.log('buy option', buy_option)
-    setBuyOptionIndex(parseInt(buy_option))
-  }, [buy_option])
+  // useEffect(() => {
+  //   if (!buy_option) return
+  //   // console.log('buy option', buy_option)
+  //   setBuyOptionIndex(parseInt(buy_option))
+  // }, [buy_option])
 
   useEffect(() => {
+    const getSameBook = async (cate) => {
+      let response = await axiosGet(`${HEROKU_API}/books?category=${cate}`)
+      console.log('same cate', response.data)
+      return response.data
+    }
     const getBookDetails = async (id) => {
       console.log('book id:', id)
       let response = await axiosGet(`${HEROKU_API}/books/${id}`)
@@ -84,21 +89,48 @@ const ProductPage = () => {
         title: data.name,
         specs: [{
           attributes: [
-            new Specs('Nhà xuất bản', 'publisher', data.publishers).getObject(),
-            new Specs('Ngày xuất bản', 'publication_date', null).getObject(),
+            new Specs('Nhà xuất bản', 'publisher', data.publisher).getObject(),
+            new Specs('Ngày xuất bản', 'publication_date', data.publication_day).getObject(),
             new Specs('Số trang', 'number_of_page', null).getObject(),
-            new Specs('Nhà sách', 'manufacturer', null).getObject(),
+            new Specs('Nhà sách', 'manufacturer', data.manufacturer).getObject(),
           ]
         }],
         price: data.price
       }
-      console.log('book data:', response.data)
+      console.log('book data:', data)
+
+      const sameBooks = await getSameBook(data.category)
+      let filtered_books = sameBooks.filter(book => book._id !== data._id)
+      let lineRow = new LineRow('Sách cùng thể loại', `/book-page/${data.category}`)
+      filtered_books.map(book => {
+        let lineItem = new LineItem(
+          null,
+          book.imageURL[0],
+          book._id,
+          book.price,
+          null,
+          null,
+          null,
+          book.name,
+          book.stars.averageStars
+        )
+        lineRow.addItem(lineItem.getObject())
+      })
+      if (lineRow.items.length > 0) setSameBooks(lineRow)
       setData(response.data)
       setDetails(details)
       // setSimilarBuy(convertBlockToLineRow(response.data.similar_buy_block).getObject())
       // setSimilarView(convertBlockToLineRow(response.data.similar_view_block).getObject())
+
     }
     getBookDetails(id)
+
+    const getComments = async () => {
+      let response = await axiosGet(`${HEROKU_API}/books/${id}/comments`)
+      const comments = response.data
+      setComments(comments)
+    }
+    getComments()
   }, [id])
 
   const clickBuyOption = (index) => () => {
@@ -139,7 +171,7 @@ const ProductPage = () => {
             specs={details.specs}
             buyOptionIndex={buyOptionIndex}
             clickBuyOption={clickBuyOption}
-            // buyOptions={data.buy_options}
+          // buyOptions={data.buy_options}
           //.filter(option => option.price)
           />
           <Box marginLeft={2} />
@@ -151,52 +183,53 @@ const ProductPage = () => {
         </Box>
       }
 
-      <Box marginY={2}><Divider /></Box>
+      {/* <Box marginY={2}><Divider /></Box> */}
 
-      <BoughtTogether />
+      {/* <BoughtTogether /> */}
 
       <Box marginTop={2}><Divider /></Box>
-      {!!similarView &&
+      {sameBooks &&
         <Box width='100%'>
           <ItemSlider
-            items={similarView.items}
-            label={similarView.label}
-            link={similarView.link}
+            items={sameBooks.items}
+            label={sameBooks.label}
+            link={sameBooks.link}
             maxWidth='none'
           />
           <Box><Divider /></Box>
         </Box>
       }
 
-      {!!similarBuy &&
-        <>
-          <ItemSlider
-            items={similarBuy.items}
-            label={similarBuy.label}
-            link={similarBuy.link}
-            maxWidth='none'
-          />
-          <Box><Divider /></Box>
-        </>
-      }
 
-      <Box
-        display='flex'
-        marginTop={2}
-      >
-        <CustomerRatings stars='4.8' votes='211,678' ratings={[86, 10, 3, 1, 1]} />
-        <Box width='75%' marginLeft={4}>
-          <Review />
-          <Review />
-          <Review />
+      {!!details &&
+        <Box
+          display='flex'
+          marginTop={2}
+        >
+          <CustomerRatings stars={details.rating} votes={numberWithCommas(details.review_count)} />
+          <Box width='75%' marginLeft={4}>
+            {/* <Review />
+            <Review />
+            <Review /> */}
 
-          <Divider />
-          <Box marginTop={1} />
-          <Button color="primary" size='small'>Xem tất cả đánh giá &nbsp;{'>'}</Button>
-          <Box marginTop={3} />
+            {comments.map((comment, key) => (
+              <Fragment key={key}>
+                <Review
+                  username={comment.createdBy.username}
+                  stars={0}
+                  details={comment.content}
+                />
+              </Fragment>
+            ))}
 
+            <Divider />
+            <Box marginTop={1} />
+            {/* <Button color="primary" size='small'>Xem tất cả đánh giá &nbsp;{'>'}</Button> */}
+            <Box marginTop={3} />
+
+          </Box>
         </Box>
-      </Box>
+      }
 
     </Box>
   )

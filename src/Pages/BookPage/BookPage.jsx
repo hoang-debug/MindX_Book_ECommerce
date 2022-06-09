@@ -48,7 +48,7 @@ const BookPage = () => {
         return
       }
       const books = response.data
-      console.log('heroku book', books)
+      // console.log('heroku book', books)
 
       let gridResult = []
       const categories = await getCategoriesV2()
@@ -58,7 +58,7 @@ const BookPage = () => {
       }
       let gridLabel = categories.find(cate => cate.idCategory === idCategory).name
       let filtered_books = books.filter(book => book.category === idCategory)
-      console.log('filter', filtered_books)
+      // console.log('filter', filtered_books)
       filtered_books.map(book => {
         let gridItem = new GridItem(
           null,
@@ -75,7 +75,7 @@ const BookPage = () => {
         )
         gridResult.push(gridItem.getObject())
       })
-      console.log('grid', gridResult)
+      // console.log('grid', gridResult)
       setGridLabel(gridLabel)
       setGridData(gridResult)
       setLoading(false)
@@ -105,6 +105,7 @@ const BookPage = () => {
         listname={gridLabel}
         namePosition='center'
         items={gridData}
+        loading={loading}     
       />
 
       {!error && loading && <Loading />}
