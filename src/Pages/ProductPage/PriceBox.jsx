@@ -154,8 +154,8 @@ const PriceBox = ({ smallImages, price, setRefreshNavbar }) => {
         display='flex'
         justifyContent='space-between'
       >
-        <Typography>Giá</Typography>
-        <Typography color="secondary">{numberWithCommas(price)}đ</Typography>
+        <Typography variant='h6'>Giá</Typography>
+        <Typography variant='h6' color="secondary">{numberWithCommas(price)}đ</Typography>
       </Box>
 
       <Box marginTop={4} />
