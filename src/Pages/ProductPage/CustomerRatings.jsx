@@ -36,7 +36,7 @@ const CustomerRatings = (props) => {
     await axiosPost(`${HEROKU_API}/comments`, data, true)
     props.getBookDetails()
   }
-  
+
   return (
     <Box
       width='25%'
@@ -80,14 +80,18 @@ const CustomerRatings = (props) => {
         </Grid>
       ))} */}
 
-      <Box marginTop={4} marginBottom={3}><Divider /></Box>
-      <Box paddingRight={2}>
-        <Typography variant="h6">Đánh giá sản phẩm này</Typography>
-        <Box marginTop={0.5} />
-        <Typography variant='body2'>Chia sẻ suy nghĩ của bạn với mọi người</Typography>
-        <Box marginTop={2} />
-        <Button variant="outlined" color="primary" fullWidth onClick={clickOpenDialog}>Viết đánh giá</Button>
-      </Box>
+      {props.allowComment &&
+        <>
+          <Box marginTop={4} marginBottom={3}><Divider /></Box>
+          <Box paddingRight={2}>
+            <Typography variant="h6">Đánh giá sản phẩm này</Typography>
+            <Box marginTop={0.5} />
+            <Typography variant='body2'>Chia sẻ suy nghĩ của bạn với mọi người</Typography>
+            <Box marginTop={2} />
+            <Button variant="outlined" color="primary" fullWidth onClick={clickOpenDialog}>Viết đánh giá</Button>
+          </Box>
+        </>
+      }
 
       <Dialog open={openDialog} onClose={() => { setOpenDialog(false) }}>
         <Box padding={2} width='500px'>
@@ -102,16 +106,16 @@ const CustomerRatings = (props) => {
             <Typography>({star})</Typography>
           </Box>
           <Box marginTop={2} />
-          <TextField 
-            value={comment} 
-            onChange={(e)=>{setComment(e.target.value)}}
-            variant="outlined" 
-            placeholder="Đánh giá của bạn..." 
-            size='small' 
-            fullWidth 
-            multiline 
-            minRows={10} 
-            maxRows={15} 
+          <TextField
+            value={comment}
+            onChange={(e) => { setComment(e.target.value) }}
+            variant="outlined"
+            placeholder="Đánh giá của bạn..."
+            size='small'
+            fullWidth
+            multiline
+            minRows={10}
+            maxRows={15}
           />
           <Box marginTop={2} />
           <CustomButton variant='contained' backgroundColor='yellow' onClick={postComment}>Gửi đánh giá</CustomButton>

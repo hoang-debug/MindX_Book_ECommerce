@@ -290,7 +290,7 @@ const Navbar = (props) => {
               <ArrowBack></ArrowBack>
             </IconButton>
             <div className={classes.searchZone}>
-              <Link to={`/search?keyword=${searchValue}`}>
+              <Link to={`/search/${searchValue}`}>
                 <IconButton><Search fontSize="small" /></IconButton>
               </Link>
               <InputBase id="input" placeholder="Tìm kiếm..." onInput={onInput} className={classes.input} value={searchValue} />

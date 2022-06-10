@@ -286,9 +286,7 @@ const ShipAddress = (props) => {
             >
               Địa chỉ giao hàng
             </Typography>
-            <Typography>
-              Giá trị giỏ hàng: <b>{numberWithCommas(props.balance)}đ</b>
-            </Typography>
+
           </Box>
           <Divider />
 

@@ -100,12 +100,14 @@ const BookPage = () => {
           </Fragment>
         )
       })} */}
-
+      <Banner
+        img_url={'https://res.cloudinary.com/ha-noi-science-and-techlonogy-university/image/upload/v1654856935/banner_sach1_p84do2.webp'}
+      />
       <BookListGrid
         listname={gridLabel}
         namePosition='center'
         items={gridData}
-        loading={loading}     
+        loading={loading}
       />
 
       {!error && loading && <Loading />}

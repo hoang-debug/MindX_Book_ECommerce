@@ -80,8 +80,8 @@ const App = () => {
         <Route path="*" element={<HomePage />} />
         <Route path="/book-page/:idCategory" element={<BookPage />} />
         <Route path="/cart" element={<CartPage setRefreshNavbar={setRefreshNavbar}/>} />
-        <Route path="/product/:id" element={<ProductPage setRefreshNavbar={setRefreshNavbar}/>} />
-        <Route path="/search" element={<SearchResult />} />
+        <Route path="/product/:id" element={<ProductPage setRefreshNavbar={setRefreshNavbar} userInfo={userInfo}/>} />
+        <Route path="/search/:keyword" element={<SearchResult />} />
         <Route path="/chon-dia-chi" element={<ChooseAddress />} />
         <Route path="/thanh-toan" element={<ThanhToan />} />
         <Route path="/profile" element={<ProfilePage />} />

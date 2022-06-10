@@ -56,12 +56,19 @@ const ProductPage = (props) => {
   const [buyOptionIndex, setBuyOptionIndex] = useState(0)
   const [sameBooks, setSameBooks] = useState(null)
   const [comments, setComments] = useState([])
+  const [allowComment, setAllowComment] = useState(true)
   let { id } = useParams()
   const getComments = async () => {
     let response = await axiosGet(`${HEROKU_API}/books/${id}/comments`)
     const comments = response.data
     setComments(comments)
     console.log('comments', comments)
+    if (!props.userInfo) return
+    console.log(props.userInfo)
+    let index = comments.findIndex(comment => {
+      return comment.createdBy.username === props.userInfo.username
+    })
+    if (index !== -1) setAllowComment(false)
   }
   const getSameBook = async (cate) => {
     let response = await axiosGet(`${HEROKU_API}/books?category=${cate}`)
@@ -197,7 +204,9 @@ const ProductPage = (props) => {
           display='flex'
           paddingBottom={4}
         >
-          <CustomerRatings stars={details.rating} votes={numberWithCommas(details.review_count)} getBookDetails={()=>getBookDetails(id)}/>
+
+          <CustomerRatings stars={details.rating} votes={numberWithCommas(details.review_count)} getBookDetails={() => getBookDetails(id)} allowComment={allowComment}/>
+
           <Divider flexItem orientation="vertical" />
           <Box
             width='75%'

@@ -81,7 +81,7 @@ const Login = ({ _setUserInfo }) => {
       console.log(value);
       await authService.login(value.username, value.password).then(
         (data) => {
-          _setUserInfo(data.data)
+          _setUserInfo({...data.data, 'username': value.username})
           navigate('/')
         },
 

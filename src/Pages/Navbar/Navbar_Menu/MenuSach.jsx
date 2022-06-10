@@ -132,25 +132,11 @@ const MenuSach = (props) => {
           <div className={classes.menu}>
             <Clear className={classes.exitIcon} onClick={props.handleCloseMenu}></Clear>
             <Grid container className={classes.container}>
-              {/* <Grid item xs={2} className={classes.leftMenu}>
-                {categoriesV1.map((cv1, index) => (
-                  <Button
-                    key={index}
-                    className={classes.languageButton}
-                    onClick={onClickCategoryV1(cv1._id)}
-                    startIcon={cateIdV1 === cv1._id ? <ChevronRight /> : null}
-                  >
-                    <Typography variant={cateIdV1 === cv1._id ? "button" : "caption"}>
-                      {cv1.name}
-                    </Typography>
-                  </Button>
-                ))}
-              </Grid> */}
               <Grid item xs={1}/>
-              <Grid item xs={11} className={classes.rightMenu}>
+              <Grid item xs={10} className={classes.rightMenu}>
                 <Grid container className={classes.categoryContainer} direction='column'>
                   {categoriesV2.map((cv2, index) => (
-                    <Grid item xs={1} key={cv2._id} className={classes.categoryWrapper}>
+                    <Grid item xs={1} sm={1} md={2} lg={3} key={cv2._id} className={classes.categoryWrapper}>
                       <Link key={index} to={`/book-page/${cv2.idCategory}`}>
                         <Typography
                           variant="body2"
@@ -164,6 +150,7 @@ const MenuSach = (props) => {
                   ))}
                 </Grid>
               </Grid>
+              <Grid item xs={1}/>
             </Grid>
           </div>
         </ClickAwayListener>

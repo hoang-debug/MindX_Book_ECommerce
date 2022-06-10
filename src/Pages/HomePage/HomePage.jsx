@@ -5,6 +5,7 @@ import Loading from "../Loading";
 import { axiosGet } from "../../Services/Ultils/axiosUtils";
 import { HEROKU_API } from "../../Services/Constants";
 import { LineItem, LineRow } from "../BookPage/useBookSearch";
+import Banner from "../BookPage/Banner";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -78,7 +79,9 @@ const HomePage = () => {
 
   return (
     <div className={classes.root}>
-
+      <Banner
+        img_url={'https://res.cloudinary.com/ha-noi-science-and-techlonogy-university/image/upload/v1654856935/banner_sach1_p84do2.webp'}
+      />
       {lineData.map((row, index) => {
         return (
           <Fragment key={index}>

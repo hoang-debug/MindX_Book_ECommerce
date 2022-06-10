@@ -1,5 +1,6 @@
 import { Box, Button, Grid, Link, makeStyles, Paper, Typography } from "@material-ui/core";
 import { ArrowRight } from "@material-ui/icons";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Banner = (props) => {
   const classes = useStyles()
+  const navigate = useNavigate()
   return (
     <div 
       className={classes.root}
@@ -31,7 +33,7 @@ const Banner = (props) => {
       <img
         className={classes.image}
         src={props.img_url}
-        onClick={()=>{window.open(props.link, '_blank')}}
+        onClick={()=>{navigate('/')}}
         alt="banner"
       />
     </div>
