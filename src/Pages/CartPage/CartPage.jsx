@@ -27,7 +27,7 @@ const CartPage = (props) => {
   }, [])
   return (
     <div className={classes.root}>
-      <Cart></Cart>
+      <Cart setRefreshNavbar={props.setRefreshNavbar}></Cart>
       {/* <BookListGrid></BookListGrid> */}
 
     </div>

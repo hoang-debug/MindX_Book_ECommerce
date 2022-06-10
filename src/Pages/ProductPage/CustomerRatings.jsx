@@ -1,18 +1,48 @@
-import { Box, Button, Divider, Grid, LinearProgress, makeStyles, Typography } from "@material-ui/core";
+import { Box, Button, Dialog, Divider, Grid, LinearProgress, makeStyles, TextField, Typography } from "@material-ui/core";
 import { Rating } from "@material-ui/lab";
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { HEROKU_API } from "../../Services/Constants";
+import { axiosPost } from "../../Services/Ultils/axiosUtils";
+import { common_variable } from "../common";
+import { CustomButton } from "../CustomComponent/CustomButton";
 
 const useStyles = makeStyles(theme => ({
 
 }))
 
-
 const CustomerRatings = (props) => {
+  const [openDialog, setOpenDialog] = useState(false)
+  const [star, setStar] = useState(5)
+  const [comment, setComment] = useState('')
+  let { id } = useParams()
+  const navigate = useNavigate()
+  const clickOpenDialog = () => {
+    if (!common_variable.signedIn) navigate('/signin')
+    else {
+      setOpenDialog(true)
+    }
+  }
+
+  const postComment = async () => {
+    let data = {
+      "content": comment,
+      "bookId": id,
+      "numberStars": star
+    }
+    setOpenDialog(false)
+    setStar(5)
+    setComment('')
+    await axiosPost(`${HEROKU_API}/comments`, data, true)
+    props.getBookDetails()
+  }
+  
   return (
     <Box
       width='25%'
       maxWidth='400px'
-      paddingRight='50px'
       boxSizing='border-box'
+      paddingTop={2}
     // style={{backgroundColor:'yellow'}}
     >
       <Typography variant="h5">Đánh giá</Typography>
@@ -51,13 +81,42 @@ const CustomerRatings = (props) => {
       ))} */}
 
       <Box marginTop={4} marginBottom={3}><Divider /></Box>
+      <Box paddingRight={2}>
+        <Typography variant="h6">Đánh giá sản phẩm này</Typography>
+        <Box marginTop={0.5} />
+        <Typography variant='body2'>Chia sẻ suy nghĩ của bạn với mọi người</Typography>
+        <Box marginTop={2} />
+        <Button variant="outlined" color="primary" fullWidth onClick={clickOpenDialog}>Viết đánh giá</Button>
+      </Box>
 
-      <Typography variant="h6">Đánh giá sản phẩm này</Typography>
-      <Box marginTop={0.5} />
-      <Typography variant='body2'>Chia sẻ suy nghĩ của bạn với mọi người</Typography>
-      <Box marginTop={2} />
-
-      <Button variant="outlined" color="primary" fullWidth >Viết đánh giá</Button>
+      <Dialog open={openDialog} onClose={() => { setOpenDialog(false) }}>
+        <Box padding={2} width='500px'>
+          <Typography variant='h6'>Đánh giá sách</Typography>
+          <Divider />
+          <Box marginTop={2} />
+          <Box display='flex'>
+            <Typography>Số sao:</Typography>
+            <Box marginLeft={1} />
+            <Rating precision={1} value={star} onChange={(e, value) => { setStar(value) }} />
+            <Box marginLeft={1} />
+            <Typography>({star})</Typography>
+          </Box>
+          <Box marginTop={2} />
+          <TextField 
+            value={comment} 
+            onChange={(e)=>{setComment(e.target.value)}}
+            variant="outlined" 
+            placeholder="Đánh giá của bạn..." 
+            size='small' 
+            fullWidth 
+            multiline 
+            minRows={10} 
+            maxRows={15} 
+          />
+          <Box marginTop={2} />
+          <CustomButton variant='contained' backgroundColor='yellow' onClick={postComment}>Gửi đánh giá</CustomButton>
+        </Box>
+      </Dialog>
 
     </Box>
   )

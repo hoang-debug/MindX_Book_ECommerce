@@ -174,7 +174,7 @@ const BookDetails = ({ authors, desc, quantity_sold, rating, review_count, title
           minimumTouchDrag={0}
           responsive={responsive}
           showDots={false}
-          slidesToSlide={3}
+          slidesToSlide={2}
           swipeable
           renderDotsOutside
           className="slider"

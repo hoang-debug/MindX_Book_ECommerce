@@ -59,7 +59,7 @@ const styles = makeStyles({
   },
 });
 
-const Login = () => {
+const Login = ({ _setUserInfo }) => {
   const [errMessage, setErrMessage] = useState("");
   const navigate = useNavigate()
 
@@ -80,11 +80,13 @@ const Login = () => {
     onSubmit: async (value) => {
       console.log(value);
       await authService.login(value.username, value.password).then(
-        navigate('/'),
+        (data) => {
+          _setUserInfo(data.data)
+          navigate('/')
+        },
 
-        
         (error) => {
-          if (error?.response.status === 400 ||error?.response.status === 500) {
+          if (error?.response.status === 400 || error?.response.status === 500) {
             setErrMessage(
               error.response.data.message
             );

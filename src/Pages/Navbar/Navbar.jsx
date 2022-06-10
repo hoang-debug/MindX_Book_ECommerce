@@ -1,6 +1,6 @@
 import { AppBar, Avatar, Badge, Box, Button, IconButton, InputBase, makeStyles, Slide, Toolbar, Typography, useScrollTrigger, useTheme } from "@material-ui/core"
-import { ArrowBack, Clear, ExpandMore, Search, ShoppingBasket } from "@material-ui/icons"
-import React, { useState } from "react"
+import { ArrowBack, Clear, ExpandMore, Search, ShoppingBasket, ShoppingBasketOutlined } from "@material-ui/icons"
+import React, { useEffect, useState } from "react"
 import LogoIcon from "../images/logo.png"
 import MenuSach from "./Navbar_Menu/MenuSach"
 // import MenuGioiThieu from "./Navbar_Menu/MenuGioiThieu"
@@ -205,6 +205,14 @@ const Navbar = (props) => {
 
   const [cateIdV2, setCateIdV2] = useState('')
 
+  const [badgeContent, setBadgeContent] = useState(0)
+
+  useEffect(() => {
+    setBadgeContent(JSON.parse(localStorage.getItem('cart')).length)
+    console.log('badge', JSON.parse(localStorage.getItem('cart')).length)
+  });
+
+
   return (
     <div>
       <HideOnScroll {...props}>
@@ -299,8 +307,8 @@ const Navbar = (props) => {
                     // <Typography variant="body2" className={isActive ? classes.linkActive : classes.linkInActive}>
                     //   Giỏ hàng
                     // </Typography>
-                    <Badge badgeContent={4} color="secondary" overlap="rectangular">
-                      <ShoppingBasket />
+                    <Badge badgeContent={badgeContent} color="secondary" overlap="rectangular">
+                      <ShoppingBasketOutlined />
                     </Badge>
                   )}
                 </NavLink>
@@ -310,11 +318,11 @@ const Navbar = (props) => {
                   5 stars
                 </Typography>
               </Box> */}
-              <Box className={classes.tabBox}>
+              {/* <Box className={classes.tabBox}>
                 <Typography variant="body2">
                   10.000.000đ
                 </Typography>
-              </Box>
+              </Box> */}
 
               <Box className={classes.tabBox}>
                 {props.signedIn ? (

@@ -11,12 +11,12 @@ import SearchResult from "./Pages/SearchResult/SearchResult"
 import Signin from "./Pages/Signin/Signin"
 import { useEffect, useState } from "react"
 import ConfirmPage from "./Pages/ConfirmPage/ConfirmPage"
-import { BASE_API } from "./Services/Constants"
+import { BASE_API, HEROKU_API } from "./Services/Constants"
 import { axiosGet } from "./Services/Ultils/axiosUtils"
 import { common_variable } from "./Pages/common"
 import Login from "./Pages/Signin/CustomSignIn"
 import HomePage from './Pages/HomePage/HomePage'
-
+import DangVanChuyen from "./Pages/CheckOut/DangVanChuyen"
 const useStyles = makeStyles((theme) => ({
   app: {
     width: '100%',
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
     position: 'relative',
     backgroundColor: theme.palette.grey[100],
-    paddingBottom: theme.spacing(4)
+    // paddingBottom: theme.spacing(4)
   },
 }))
 
@@ -35,51 +35,59 @@ const App = () => {
   const [userInfo, setUserInfo] = useState(null)
   const [signedIn, setSignedIn] = useState(false)
 
+  // useEffect(() => {
+  //   const checkLogin = async () => {
+  //     let url = `${BASE_API}/users`
+  //     let response = await axiosGet(url, null, true)
+  //     console.log('check login', response)
+  //     if (response !== null) {
+  //       setSignedIn(true)
+  //       setUserInfo(response.data)
+  //     }
+  //   }
+  //   // checkLogin()
+  // }, [])
+
   useEffect(() => {
-    const checkLogin = async () => {
-      let url = `${BASE_API}/users`
-      let response = await axiosGet(url, null, true)
-      console.log('check login', response)
-      if (response !== null) {
-        setSignedIn(true)
-        setUserInfo(response.data)
-      }
-    }
-    // checkLogin()
+    localStorage.setItem('cart', JSON.stringify([]))
   }, [])
 
-  const _setUserInfo = (info) => {
+  const _setUserInfo = async (info) => {
+    console.log('data', info)
     setSignedIn(true)
     setUserInfo(info)
+    // let response = await axiosGet(`${HEROKU_API}/cart`, null, true)
+    // let cart = response.data.sellProducts.map((item) => {
+    //   return {
+    //     book: item.book,
+    //     qualityBook: item.qualityBook
+    //   }
+    // }) || []
+    // localStorage.setItem('cart', JSON.stringify([]))
   }
 
   useEffect(() => {
     common_variable.signedIn = signedIn
   }, [signedIn])
 
-  // useEffect(() => {
-  //   const getBooks = async () => {
-  //     let response = await axiosGet('https://book-ecommerce-be.herokuapp.com/api/books', null, false)
-  //     console.log('get books heroku', response)
-
-  //   }
-  //   getBooks()
-  // }, [])
+  const [refreshNavbar, setRefreshNavbar] = useState(false)
+  
 
   return (
     <div className={classes.app}>
-      <Navbar signedIn={signedIn} />
+      <Navbar signedIn={signedIn} refresh={refreshNavbar}/>
       <Routes>
-        <Route path="*" element={<HomePage/>} />
+        <Route path="*" element={<HomePage />} />
         <Route path="/book-page/:idCategory" element={<BookPage />} />
-        <Route path="/cart" element={<CartPage />} />
-        <Route path="/product/:id" element={<ProductPage />} />
+        <Route path="/cart" element={<CartPage setRefreshNavbar={setRefreshNavbar}/>} />
+        <Route path="/product/:id" element={<ProductPage setRefreshNavbar={setRefreshNavbar}/>} />
         <Route path="/search" element={<SearchResult />} />
         <Route path="/chon-dia-chi" element={<ChooseAddress />} />
         <Route path="/thanh-toan" element={<ThanhToan />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/dang-van-chuyen" element={<DangVanChuyen />} />
         {/* <Route path="/signin" element={<Signin _setUserInfo={_setUserInfo} signedIn={signedIn} />} /> */}
-        <Route path="/signin" element={<Login />} />
+        <Route path="/signin" element={<Login _setUserInfo={_setUserInfo} />} />
         <Route path="/confirm" element={<ConfirmPage />} />
       </Routes>
     </div>

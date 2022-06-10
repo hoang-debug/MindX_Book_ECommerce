@@ -1,8 +1,9 @@
 import axios from "axios";
+import {HEROKU_API} from '../Constants/index'
 
 const login = async (username, password) => {
   const response = await axios.post(
-    `${process.env.REACT_APP_Backend_URI}/api/auth/login`,
+    `${HEROKU_API}/auth/login`,
     {
       username,
       password,
@@ -10,7 +11,7 @@ const login = async (username, password) => {
   );
   console.log(response)
   if (response.data.data.token) {
-    localStorage.setItem("token", JSON.stringify(response.data.data));
+    localStorage.setItem("access_token", response.data.data.token);
   }
   return response.data;
 };

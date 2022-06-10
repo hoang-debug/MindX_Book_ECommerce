@@ -2,12 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
-// import ScrollToTop from "./ultils/ScrollToTop";
+import ScrollToTop from './Services/Ultils/ScrollToTop'
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      {/* <ScrollToTop/> */}
+      <ScrollToTop/>
       <App />
     </BrowserRouter>
   </React.StrictMode>,

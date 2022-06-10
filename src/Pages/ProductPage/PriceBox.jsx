@@ -1,16 +1,18 @@
-import { Box, Button, Divider, IconButton, makeStyles, TextField, Typography } from "@material-ui/core";
+import { Box, Button, Divider, IconButton, makeStyles, Slide, Snackbar, TextField, Typography } from "@material-ui/core";
 import { AddBox, IndeterminateCheckBox } from "@material-ui/icons";
 import isNumber from "is-number";
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { common_variable } from "../common";
-import { BASE_API } from "../../Services/Constants";
+import { BASE_API, HEROKU_API } from "../../Services/Constants";
 import { CustomButton, MyButton } from "../CustomComponent/CustomButton";
 import Loading from "../Loading";
 import { axiosPost } from "../../Services/Ultils/axiosUtils";
 import { numberWithCommas } from "../../Services/Ultils/NumberUtils";
 import SeeAllImage from "./SeeAllImage";
 import './TextField.css'
+import axios from "axios";
+import { Alert } from "@material-ui/lab";
 const useStyles = makeStyles((theme) => ({
   priceBox: {
     backgroundColor: theme.palette.common.white,
@@ -42,11 +44,26 @@ const calcPercent = (num1, num2) => {
   return (100 - num1 / num2 * 100).toFixed(0)
 }
 
-const PriceBox = ({ smallImages, price }) => {
+function TransitionLeft(props) {
+  return (
+    <Slide {...props} direction="left">
+      <Alert
+        severity="success"
+        elevation={6} variant="filled"
+      >
+        Đã thêm vào giỏ
+      </Alert>
+    </Slide>
+  )
+}
+
+
+
+const PriceBox = ({ smallImages, price, setRefreshNavbar }) => {
   const classes = useStyles()
   const [amount, setAmount] = useState(1)
   const [buyable, setBuyable] = useState(false)
-
+  const [openAlert, setOpenAlert] = useState(false)
   let [searchParams] = useSearchParams()
   let buy_amount = searchParams.get('buy_amount')
 
@@ -67,8 +84,11 @@ const PriceBox = ({ smallImages, price }) => {
     else if (amount > 0) setAmount(amount - 1)
   }
 
+  let { id } = useParams()
 
-  const navigate = useNavigate()
+  useEffect(() => {
+    setAmount(1)
+  }, [id])
 
   const addToCart = async () => {
     // if (!common_variable.signedIn) {
@@ -83,12 +103,24 @@ const PriceBox = ({ smallImages, price }) => {
     //   quantity: amount
     // }, true)
     // console.log('add to cart', response)
-    navigate('/confirm', {
-      state: {
-        prev: 'product-page',
-        src: smallImages[0],
-      }
+    // navigate('/confirm', {
+    //   state: {
+    //     prev: 'product-page',
+    //     src: smallImages[0],
+    //   }
+    // })
+    let cart = JSON.parse(localStorage.getItem('cart'))
+    let sameIndex = cart.findIndex(book => book.book === id)
+    if (sameIndex !== -1) cart[sameIndex].qualityBook += amount
+    else cart.push({
+      book: id,
+      qualityBook: amount
     })
+    localStorage.setItem('cart', JSON.stringify(cart))
+    // axiosPost(`${HEROKU_API}/cart`, cart, true)
+    console.log('cart', cart)
+    setOpenAlert(true)
+    setRefreshNavbar(prev => !prev)
   }
 
   const onChangeAmount = (event) => {
@@ -126,7 +158,7 @@ const PriceBox = ({ smallImages, price }) => {
         <Typography color="secondary">{numberWithCommas(price)}đ</Typography>
       </Box>
 
-      <Box marginTop={4}/>
+      <Box marginTop={4} />
 
       <SeeAllImage
         smallImages={smallImages}
@@ -161,6 +193,17 @@ const PriceBox = ({ smallImages, price }) => {
         {/* <Button color='secondary' variant="contained" fullWidth disabled={amount === 0}>Mua ngay</Button> */}
         {/* <CustomButton backgroundColor='orange' borderRadius='round' variant="contained" fullWidth disabled={!buyable}>Mua ngay</CustomButton> */}
       </Box>
+
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={5000}
+        onClose={() => { setOpenAlert(false) }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        TransitionComponent={TransitionLeft}
+      >
+
+      </Snackbar>
+
 
     </Box>
   )

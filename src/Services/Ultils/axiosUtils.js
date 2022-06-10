@@ -21,7 +21,7 @@ export const axiosPost = async (url, params, isHeader = false) => {
   let result = await axios({
     method: 'post',
     url: url,
-    params: params,
+    data: params,
     headers: isHeader ? {
       "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
     } : null

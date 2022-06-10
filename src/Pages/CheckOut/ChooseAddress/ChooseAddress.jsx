@@ -8,7 +8,7 @@ import ThanhToanStepper from "../ThanhToanStepper";
 import { CustomButton } from "../../CustomComponent/CustomButton";
 import { axiosDelete, axiosGet, axiosPatch, axiosPost } from "../../../Services/Ultils/axiosUtils";
 import { v4 } from "uuid";
-import { BASE_API, PrevChooseAddress } from "../../../Services/Constants";
+import { BASE_API, HEROKU_API, PrevChooseAddress } from "../../../Services/Constants";
 import { common_variable } from "../../common";
 
 const useStyles = makeStyles((theme) => ({
@@ -60,7 +60,7 @@ const ShipAddress = (props) => {
   const navigate = useNavigate()
   useEffect(() => {
     if (!common_variable.signedIn) {
-      navigate('/signin', {state: {prev: '/home'}})
+      navigate('/signin', { state: { prev: '/home' } })
     }
   }, [])
 
@@ -76,7 +76,7 @@ const ShipAddress = (props) => {
 
   useEffect(() => {
     getProvinceList()
-    getUserAddresses()
+    // getUserAddresses()
   }, [])
 
   const clearAddressInput = () => {
@@ -137,7 +137,6 @@ const ShipAddress = (props) => {
   }
 
   const onFocusCommune = async () => {
-    console.log('hehe')
     const index = districtList.findIndex(dist => dist.name === district)
     if (index !== -1) {
       const data = await axiosGet(`https://api.mysupership.vn/v1/partner/areas/commune?district=${districtList[index].code}`)
@@ -147,6 +146,9 @@ const ShipAddress = (props) => {
       setCommuneList([])
     }
   }
+
+  const { state } = useLocation()
+  const prev = (state) ? state.prev : null
 
   const addNewAddress = async (event) => {
     event.preventDefault()
@@ -158,8 +160,6 @@ const ShipAddress = (props) => {
     const district = inputs['district'].value
     const province = inputs['province'].value
     const street = inputs['street'].value
-    // const is_office = inputs['is_office'].value
-    // setAddressList(prev => [...prev, new_address])
     const new_address = {
       name,
       mobile,
@@ -167,12 +167,16 @@ const ShipAddress = (props) => {
       district,
       ward,
       street,
-      is_office: true
     }
     console.log('new address', new_address)
-    await axiosPost(`${BASE_API}/users/addresses`, new_address, true)
-    getUserAddresses()
-    clearAddressInput()
+    localStorage.setItem('cart', JSON.stringify([]))
+    await axiosPost(`${HEROKU_API}/bill`, {
+      "sellProducts": JSON.parse(localStorage.getItem('cart')),
+      "address": JSON.stringify(new_address),
+      "phoneNumber": "0965976864"
+    }, true)
+    if (prev === PrevChooseAddress.SHIP_DINH_GIA) navigate('/dang-van-chuyen', { state: { user_address: new_address } })
+    else if (prev === PrevChooseAddress.CHECK_OUT) navigate('/dang-van-chuyen', { state: { user_address: new_address } })
   }
 
   const deleteAddress = (_id) => async (event) => {
@@ -212,9 +216,9 @@ const ShipAddress = (props) => {
     }
     const old_address = addressList.find(address => address._id === addressID)
     let all_fields = ['name', 'mobile', 'province', 'district', 'ward', 'street', 'is_office']
-    let updated_fields = all_fields.filter(field => old_address[field] !== updated_address[field]) 
+    let updated_fields = all_fields.filter(field => old_address[field] !== updated_address[field])
     console.log(updated_fields)
-     updated_fields.map(async (field) => {
+    updated_fields.map(async (field) => {
       await axiosPatch(`${BASE_API}/users/addresses/${addressID}`, {
         field_name: field,
         value: updated_address[field]
@@ -227,8 +231,6 @@ const ShipAddress = (props) => {
     getUserAddresses()
   }
 
-  const { state } = useLocation()
-  const prev = (state) ? state.prev : null
 
   const chooseAddress = (address) => (e) => {
     console.log(address, state)
@@ -282,7 +284,7 @@ const ShipAddress = (props) => {
               style={{ fontWeight: '500' }}
               gutterBottom
             >
-              Chọn địa chỉ giao hàng
+              Địa chỉ giao hàng
             </Typography>
             <Typography>
               Giá trị giỏ hàng: <b>{numberWithCommas(props.balance)}đ</b>
@@ -290,53 +292,9 @@ const ShipAddress = (props) => {
           </Box>
           <Divider />
 
-          {addressList.length === 0 &&
-            <Box marginTop={2}>
-              <Typography style={{ fontStyle: 'italic' }}>Bạn chưa lưu địa chỉ, hãy thêm địa chỉ ở bên dưới nhé</Typography>
-            </Box>
-          }
-
-          {addressList.length > 0 &&
-            <Box
-              boxSizing='border-box'
-              paddingLeft={2}
-              paddingTop={2}
-            >
-              {addressList.map((address, index) => (
-                <Fragment key={address._id}>
-                  <Address
-                    _id={address._id}
-                    name={address.name}
-                    mobile={address.mobile}
-                    province={address.province}
-                    district={address.district}
-                    ward={address.ward}
-                    street={address.street}
-                    is_office={address.is_office}
-                    deleteAddress={deleteAddress}
-                    chooseAddress={chooseAddress}
-                    onClickUpdateAddress={onClickUpdateAddress}
-                  />
-                  {index !== addressList.length - 1 && <Box marginY={2}><Divider /></Box>}
-                </Fragment>
-              ))}
-
-            </Box>
-          }
-
-          <Box marginY={2}><Divider /></Box>
-
-          <Typography
-            variant="h6"
-            style={{ fontWeight: '400' }}
-            gutterBottom
-          >
-            {update ? 'Sửa địa chỉ' : 'Thêm địa chỉ giao hàng'}
-          </Typography>
-
           <Box marginTop={2} />
 
-          <form onSubmit={update ? updateAddress : addNewAddress}>
+          <form onSubmit={addNewAddress}>
             <Box width='60%'>
               {/* <Input fullWidth placeholder="Người nhận" required id="username"></Input> */}
               <TextField value={name} size="small" variant="outlined" fullWidth label="Người nhận" required id="name" onChange={(e) => setName(e.target.value)}></TextField>
@@ -410,7 +368,7 @@ const ShipAddress = (props) => {
             </Box>
             <Box marginTop={2} />
             {!update &&
-              <CustomButton size='small' type="submit" backgroundColor="yellow" variant="contained" className={classes.submitButton}>Thêm địa chỉ</CustomButton>
+              <CustomButton size='small' type="submit" backgroundColor="yellow" variant="contained" className={classes.submitButton}>Giao đến địa chỉ này</CustomButton>
             }
 
             {update &&

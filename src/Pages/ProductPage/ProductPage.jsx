@@ -1,4 +1,4 @@
-import { Box, Button, Divider, makeStyles } from "@material-ui/core";
+import { Box, Button, Divider, makeStyles, Typography } from "@material-ui/core";
 import '../HomePage/Slider/ItemSlider.css'
 import BookImage from "./BookImage";
 import BookDetails from "./BookDetails";
@@ -49,7 +49,7 @@ class Specs {
 
 let slider_items = new Array(10).fill(slider_item)
 
-const ProductPage = () => {
+const ProductPage = (props) => {
   const classes = useStyles()
   const [data, setData] = useState(null)
   const [details, setDetails] = useState(null)
@@ -57,80 +57,70 @@ const ProductPage = () => {
   const [sameBooks, setSameBooks] = useState(null)
   const [comments, setComments] = useState([])
   let { id } = useParams()
+  const getComments = async () => {
+    let response = await axiosGet(`${HEROKU_API}/books/${id}/comments`)
+    const comments = response.data
+    setComments(comments)
+    console.log('comments', comments)
+  }
+  const getSameBook = async (cate) => {
+    let response = await axiosGet(`${HEROKU_API}/books?category=${cate}`)
+    console.log('same cate', response.data)
+    return response.data
+  }
+  const getBookDetails = async (id) => {
+    console.log('book id:', id)
+    let response = await axiosGet(`${HEROKU_API}/books/${id}`)
+    let data = response.data
+    let details = {
+      images: data.imageURL,
+      authors: [data.author],
+      desc: data.description,
+      quantity_sold: null,
+      rating: data.stars.averageStars,
+      review_count: data.stars.totalAmountVotes,
+      title: data.name,
+      specs: [{
+        attributes: [
+          new Specs('Nhà xuất bản', 'publisher', data.publisher).getObject(),
+          new Specs('Ngày xuất bản', 'publication_date', data.publication_date).getObject(),
+          new Specs('Số trang', 'number_of_page', data.number_of_page).getObject(),
+          new Specs('Nhà sách', 'manufacturer', data.manufacturer).getObject(),
+          new Specs('Bìa sách', 'book_cover', data.book_cover).getObject(),
 
-  // let [searchParams] = useSearchParams()
-  // let buy_option = searchParams.get('buy_option')
-
-  // console.log('render')
-
-  // useEffect(() => {
-  //   if (!buy_option) return
-  //   // console.log('buy option', buy_option)
-  //   setBuyOptionIndex(parseInt(buy_option))
-  // }, [buy_option])
-
-  useEffect(() => {
-    const getSameBook = async (cate) => {
-      let response = await axiosGet(`${HEROKU_API}/books?category=${cate}`)
-      console.log('same cate', response.data)
-      return response.data
+        ]
+      }],
+      price: data.price
     }
-    const getBookDetails = async (id) => {
-      console.log('book id:', id)
-      let response = await axiosGet(`${HEROKU_API}/books/${id}`)
-      let data = response.data
-      let details = {
-        images: data.imageURL,
-        authors: [data.author],
-        desc: data.description,
-        quantity_sold: null,
-        rating: data.stars.averageStars,
-        review_count: data.stars.totalAmountVotes,
-        title: data.name,
-        specs: [{
-          attributes: [
-            new Specs('Nhà xuất bản', 'publisher', data.publisher).getObject(),
-            new Specs('Ngày xuất bản', 'publication_date', data.publication_day).getObject(),
-            new Specs('Số trang', 'number_of_page', null).getObject(),
-            new Specs('Nhà sách', 'manufacturer', data.manufacturer).getObject(),
-          ]
-        }],
-        price: data.price
-      }
-      console.log('book data:', data)
+    console.log('book data:', data)
 
-      const sameBooks = await getSameBook(data.category)
-      let filtered_books = sameBooks.filter(book => book._id !== data._id)
-      let lineRow = new LineRow('Sách cùng thể loại', `/book-page/${data.category}`)
-      filtered_books.map(book => {
-        let lineItem = new LineItem(
-          null,
-          book.imageURL[0],
-          book._id,
-          book.price,
-          null,
-          null,
-          null,
-          book.name,
-          book.stars.averageStars
-        )
-        lineRow.addItem(lineItem.getObject())
-      })
-      if (lineRow.items.length > 0) setSameBooks(lineRow)
-      setData(response.data)
-      setDetails(details)
-      // setSimilarBuy(convertBlockToLineRow(response.data.similar_buy_block).getObject())
-      // setSimilarView(convertBlockToLineRow(response.data.similar_view_block).getObject())
-
-    }
-    getBookDetails(id)
-
-    const getComments = async () => {
-      let response = await axiosGet(`${HEROKU_API}/books/${id}/comments`)
-      const comments = response.data
-      setComments(comments)
-    }
+    const sameBooks = await getSameBook(data.category)
     getComments()
+    let filtered_books = sameBooks.filter(book => book._id !== data._id)
+    let lineRow = new LineRow('Sách cùng thể loại', `/book-page/${data.category}`)
+    filtered_books.map(book => {
+      let lineItem = new LineItem(
+        null,
+        book.imageURL[0],
+        book._id,
+        book.price,
+        null,
+        null,
+        null,
+        book.name,
+        book.stars.averageStars
+      )
+      lineRow.addItem(lineItem.getObject())
+    })
+    if (lineRow.items.length > 0) setSameBooks(lineRow)
+    setData(response.data)
+    setDetails(details)
+    // setSimilarBuy(convertBlockToLineRow(response.data.similar_buy_block).getObject())
+    // setSimilarView(convertBlockToLineRow(response.data.similar_view_block).getObject())
+
+  }
+  useEffect(() => {
+    getBookDetails(id)
   }, [id])
 
   const clickBuyOption = (index) => () => {
@@ -178,6 +168,7 @@ const ProductPage = () => {
           <PriceBox
             price={details.price}
             smallImages={details.images}
+            setRefreshNavbar={props.setRefreshNavbar}
           />
 
         </Box>
@@ -204,25 +195,34 @@ const ProductPage = () => {
       {!!details &&
         <Box
           display='flex'
-          marginTop={2}
+          paddingBottom={4}
         >
-          <CustomerRatings stars={details.rating} votes={numberWithCommas(details.review_count)} />
-          <Box width='75%' marginLeft={4}>
-            {/* <Review />
-            <Review />
-            <Review /> */}
-
+          <CustomerRatings stars={details.rating} votes={numberWithCommas(details.review_count)} getBookDetails={()=>getBookDetails(id)}/>
+          <Divider flexItem orientation="vertical" />
+          <Box
+            width='75%'
+            marginLeft={2}
+            paddingTop={2}
+          >
+            <Typography variant='h5'>Bình luận</Typography>
+            <Box marginTop={2} />
             {comments.map((comment, key) => (
               <Fragment key={key}>
+                <Box marginTop={1.5} />
                 <Review
                   username={comment.createdBy.username}
-                  stars={0}
+                  stars={comment.stars}
                   details={comment.content}
                 />
+                <Box marginTop={1.5} />
               </Fragment>
             ))}
 
-            <Divider />
+            {comments.length === 0 &&
+              <Typography>Chưa có bình luận nào :(</Typography>
+            }
+
+            {/* <Divider /> */}
             <Box marginTop={1} />
             {/* <Button color="primary" size='small'>Xem tất cả đánh giá &nbsp;{'>'}</Button> */}
             <Box marginTop={3} />
@@ -230,6 +230,7 @@ const ProductPage = () => {
           </Box>
         </Box>
       }
+
 
     </Box>
   )

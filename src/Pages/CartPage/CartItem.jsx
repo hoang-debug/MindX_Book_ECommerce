@@ -1,17 +1,20 @@
 import { Box, Button, ButtonGroup, Divider, FormControl, IconButton, InputLabel, makeStyles, MenuItem, Select, Typography } from "@material-ui/core";
 import { Add, AddBox, Delete, IndeterminateCheckBox } from "@material-ui/icons";
 import { useEffect, useRef, useState } from "react";
-import { BASE_FILE } from "../../Services/Constants";
+import { BASE_FILE, HEROKU_API } from "../../Services/Constants";
 import { CustomButton } from "../CustomComponent/CustomButton";
 import { choices } from "../ProductPage/BookDetails";
 import { numberWithCommas } from "../../Services/Ultils/NumberUtils";
+import { axiosGet } from "../../Services/Ultils/axiosUtils";
+import { Link, useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   img: {
     width: '100px',
     height: '140px',
     objectFit: 'cover',
-    objectPosition: 'top'
+    objectPosition: 'top',
+    cursor: 'pointer'
   },
   formControl: {
     minWidth: 60
@@ -24,11 +27,18 @@ const useStyles = makeStyles((theme) => ({
   functionButton: {
     paddingLeft: 20,
     paddingRight: 20
-  }
+  },
+  title: {
+    cursor: 'pointer',
+    '&:hover' : {
+      textDecoration: 'underline'
+    }
+  },
 }))
 
 const CartItem = (props) => {
   const classes = useStyles()
+  const [details, setDetails] = useState(null)
   const [amount, setAmount] = useState(1)
   const isChangeAmount = useRef(false)
   const changeAmount = (isAdd) => (event) => {
@@ -37,70 +47,100 @@ const CartItem = (props) => {
     else if (amount > 0) setAmount(prev => prev - 1)
   }
 
-  useEffect(()=>{
+  useEffect(() => {
+    if (!props._id) return
+    const getData = async () => {
+      let response = await axiosGet(`${HEROKU_API}/books/${props._id}`)
+      let data = response.data
+      console.log(data)
+      let details = {
+        image: data.imageURL[0],
+        authors: [data.author],
+        title: data.name,
+        price: data.price,
+        quantity: props.quantity
+      }
+      setDetails(details)
+
+      props.calcSubtotal()
+    }
+    getData()
+  }, [props._id])
+
+  useEffect(() => {
     if (!isChangeAmount.current) return
     isChangeAmount.current = false
     props.updateItem(props._id, amount)
   }, [amount])
 
-  useEffect(()=>{
+  useEffect(() => {
     if (props.quantity) setAmount(props.quantity)
   }, [props.quantity])
 
+  const navigate = useNavigate()
+  const goToProductPage = () => {
+    navigate(`/product/${props._id}`)
+  }
+
   return (
     <div>
-      <Box
-        display='flex'
-        padding={2}
-        boxSizing='border-box'
-        justifyContent='space-between'
-        height={170}
-      >
-        <Box width='120px'>
-          <img
-            className={classes.img}
-            src={`${BASE_FILE}/${props.src}`}
-          />
-        </Box>
-        <Box
-          width='calc(100% - 200px)'
-          position='relative'
-          paddingX={2}
-          boxSizing='border-box'
-        >
-          <Typography variant='h6' component='div' noWrap>{props.title}</Typography>
-          <Typography variant='subtitle1' component='div'>{`by ${props.authors.join(', ')}`}</Typography>
-          <Typography variant="subtitle1" component='div' style={{ color: 'orange', fontWeight: 500 }}>{choices[props.otype]}</Typography>
+      {!!details &&
+        <>
           <Box
-            width='100%'
-            position='absolute'
-            bottom={-5}
             display='flex'
-            alignItems='center'
+            padding={2}
+            boxSizing='border-box'
+            justifyContent='space-between'
+            height={170}
           >
-            <IconButton className={classes.amountButton} onClick={changeAmount(true)}><AddBox></AddBox></IconButton>
-            <Box marginLeft={1} />
-            <Typography component='div'>{amount}</Typography>
-            <Box marginLeft={1} />
-            <IconButton className={classes.amountButton} onClick={changeAmount(false)}><IndeterminateCheckBox></IndeterminateCheckBox></IconButton>
-            {/* <ButtonGroup variant="text" size="small">
+            <Box width='120px'>
+              <img
+                className={classes.img}
+                src={`${details.image}`}
+                onClick={()=>{goToProductPage()}}
+              />
+            </Box>
+            <Box
+              width='calc(100% - 200px)'
+              position='relative'
+              paddingX={2}
+              boxSizing='border-box'
+            >
+              <Typography variant='h6' component='div' noWrap onClick={()=>{goToProductPage()}} className={classes.title}>{details.title}</Typography>
+              <Typography variant='subtitle1' component='div'>{`by ${details.authors.join(', ')}`}</Typography>
+              <Typography style={{ color: 'orange' }}>({numberWithCommas(details.price)}đ)</Typography>
+              <Box
+                width='100%'
+                position='absolute'
+                bottom={-5}
+                display='flex'
+                alignItems='center'
+              >
+                <IconButton className={classes.amountButton} onClick={changeAmount(true)}><AddBox></AddBox></IconButton>
+                <Box marginLeft={1} />
+                <Typography component='div'>{amount}</Typography>
+                <Box marginLeft={1} />
+                <IconButton className={classes.amountButton} onClick={changeAmount(false)}><IndeterminateCheckBox></IndeterminateCheckBox></IconButton>
+                {/* <ButtonGroup variant="text" size="small">
               <Button color="primary" className={classes.functionButton} variant>Xóa</Button>
               <Button color="primary" className={classes.functionButton}>Save for later</Button>
               <Button color="primary" className={classes.functionButton}>Compare with similar items</Button>
             </ButtonGroup> */}
+              </Box>
+            </Box>
+            <Box
+              display='flex'
+              flexDirection='column'
+              justifyContent='space-between'
+              alignItems='flex-end'
+            >
+              <Typography align="right" variant="h6"><span className="cart-item-price">{`${numberWithCommas(details.price * amount)}đ`}</span></Typography>
+              <CustomButton variant="contained" backgroundColor='white' size="small" width='80px' onClick={props.deleteItem(props._id)}>Xóa</CustomButton>
+            </Box>
           </Box>
-        </Box>
-        <Box
-          display='flex'
-          flexDirection='column'
-          justifyContent='space-between'
-          alignItems='flex-end'
-        >
-          <Typography align="right" variant="h6">{`${numberWithCommas(props.price * amount)}đ`}</Typography>
-          <CustomButton variant="contained" backgroundColor='white' size="small" width='80px' onClick={props.deleteItem(props._id)}>Xóa</CustomButton>
-        </Box>
-      </Box>
-      <Divider />
+          <Divider />
+        </>
+      }
     </div>
 
   )

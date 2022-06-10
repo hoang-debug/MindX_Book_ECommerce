@@ -1,6 +1,6 @@
 import { Step, StepLabel, Stepper } from "@material-ui/core"
 
-const steps = ['Đăng nhập', 'Chọn địa chỉ', 'Thanh toán', 'Vận chuyển', 'Kết thúc']
+const steps = ['Đăng nhập', 'Chọn địa chỉ', 'Vận chuyển']
 
 const ThanhToanStepper = (props) => {
   return (

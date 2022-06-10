@@ -2,9 +2,9 @@ import { Box, Button, Divider, Grid, makeStyles, Paper, Typography } from "@mate
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { BASE_API, PrevChooseAddress } from "../../Services/Constants";
+import { BASE_API, HEROKU_API, PrevChooseAddress } from "../../Services/Constants";
 import { CustomButton } from "../CustomComponent/CustomButton";
-import { axiosGet, axiosDelete, axiosPatch } from "../../Services/Ultils/axiosUtils";
+import { axiosGet, axiosDelete, axiosPatch, axiosPost } from "../../Services/Ultils/axiosUtils";
 import { numberWithCommas } from "../../Services/Ultils/NumberUtils";
 import CartItem from "./CartItem";
 import RecommendItem from "./RecommendItem";
@@ -68,44 +68,62 @@ const Cart = (props) => {
   const classes = useStyles()
   const navigate = useNavigate()
 
-  
-  const [cartInfo, setCartInfo] = useState({})
+
   const [items, setItems] = useState([])
-  
+  const [subtotal, setSubtotal] = useState(0)
   const getCartItems = async () => {
-    let response = await axiosGet(`${BASE_API}/carts/active`, null, true)
-    console.log('cart items', response.data)
-    if (!response) return
-    setCartInfo(response.data)
-    setItems(response.data.items)
+    let items = JSON.parse(localStorage.getItem('cart'))
+    setItems(items)
   }
-  
+
   useEffect(() => {
     getCartItems()
   }, [])
-  
-  const deleteItem = (id) => async (event) => {
-    let response = await axiosDelete(`${BASE_API}/cartitems/${id}`, null, true)
-    console.log(response)
-    getCartItems()
-  }
-  
-  const updateItem = async (id, amount) => {
-    let response = await axiosPatch(`${BASE_API}/cartitems/${id}`, {
-      "field_name": "quantity",
-      "value": `${amount}`
-    }, true)
-    console.log(response)
-    getCartItems()
+
+  const calcSubTotal = () => {
+    let prices = document.getElementsByClassName('cart-item-price')
+    let subtotal = 0
+    for (let price of prices) {
+      subtotal += Number(price.innerText.replace('.', '').replace('đ', ''))
+    }
+    setSubtotal(subtotal)
+    // let subtotal = prices.reduce((prev, curr) => {
+    //   return prev + Number(curr.innerText)
+    // }, 0)
+    // setSubtotal(subtotal)
+    // console.log(subtotal)
   }
 
-  const checkOut = () => {
-    navigate('/chon-dia-chi', {state: {prev: PrevChooseAddress.CHECK_OUT}})
+  const deleteItem = (id) => async (event) => {
+    let items = JSON.parse(localStorage.getItem('cart'))
+    let index = items.findIndex(item => item.book === id)
+    items.splice(index, 1)
+    localStorage.setItem('cart', JSON.stringify(items))
+    setItems(items)
+    props.setRefreshNavbar(prev => !prev)
   }
-  
+
+  const updateItem = async (id, amount) => {
+    let items = JSON.parse(localStorage.getItem('cart'))
+    let index = items.findIndex(item => item.book === id)
+    items[index].qualityBook = amount
+    localStorage.setItem('cart', JSON.stringify(items))
+    setItems(items)
+  }
+
+  useEffect(()=>{
+    calcSubTotal()
+  }, [items])
+
+  const checkOut = () => {
+    navigate('/chon-dia-chi', { state: { prev: PrevChooseAddress.CHECK_OUT } })
+  }
+
+ 
+
   return (
     <Box
-    direction="row"
+      direction="row"
       className={classes.root}
       display='flex'
     >
@@ -120,9 +138,13 @@ const Cart = (props) => {
           <Box display='flex' flexDirection='column' alignItems='center' marginTop={4} paddingBottom={4}>
             <Typography variant="h5">Bạn chưa có gì trong giỏ hàng</Typography>
             <Box marginTop={3} />
-            <Link to='\home'>
-              <CustomButton variant="contained" backgroundColor='yellow'>Quay lại trang chủ</CustomButton>
-            </Link>
+            <CustomButton 
+              variant="contained" 
+              backgroundColor='yellow'
+              onClick={()=>{navigate('/')}}
+            >
+              Quay lại trang chủ
+            </CustomButton>
           </Box>
         </Box>
       }
@@ -135,20 +157,16 @@ const Cart = (props) => {
           <Divider />
           {items.map((item, index) => (
             <CartItem
-              key={index}
-              _id={item._id}
-              authors={item.authors}
-              otype={item.otype}
-              price={item.price}
-              quantity={item.quantity}
-              src={item.thumb_url}
-              title={item.title}
+              key={`${item.book}`}
+              _id={item.book}
+              quantity={item.qualityBook}
               deleteItem={deleteItem}
               updateItem={updateItem}
+              calcSubtotal={calcSubTotal}
             />
           ))}
           <Box display='flex' justifyContent='flex-end' marginTop={2} paddingRight={2}>
-            <Typography variant="h6" style={{ fontWeight: 400 }}>{`Tổng (${items.length} sản phẩm):`} <b>{numberWithCommas(cartInfo.subtotal)}đ</b></Typography>
+            <Typography variant="h6" style={{ fontWeight: 400 }}>{`Tổng (${items.length} sản phẩm):`} <b>{numberWithCommas(subtotal)}đ</b></Typography>
           </Box>
         </Box>
       }
@@ -157,7 +175,7 @@ const Cart = (props) => {
           <Box marginRight={2} />
           <Box className={classes.rightGrid} maxWidth='348px'>
             <Box className={classes.subTotal} height='80px' display='flex' flexDirection='column' justifyContent='space-between' padding={3}>
-              <Typography variant="body1" style={{ fontWeight: 400 }}>{`Tổng (${items.length} sản phẩm):`} <b>{numberWithCommas(cartInfo.subtotal)}đ</b></Typography>
+              <Typography variant="body1" style={{ fontWeight: 400 }}>{`Tổng (${items.length} sản phẩm):`} <b>{numberWithCommas(subtotal)}đ</b></Typography>
               <Box boxSizing='border-box' width="100%">
                 {/* <Button fullWidth variant="contained" color='primary' style={{ backgroundColor: '#FFD714' }}>
               <span style={{ color: '#000' }}>Thanh toán</span>
@@ -165,7 +183,7 @@ const Cart = (props) => {
                 <CustomButton fullWidth variant="contained" backgroundColor='yellow' onClick={checkOut}>Thanh toán</CustomButton>
               </Box>
             </Box>
-            <Box className={classes.youMayLike} height={500} padding={2} marginTop={2} >
+            {/* <Box className={classes.youMayLike} height={500} padding={2} marginTop={2} >
               <Typography variant="h5" style={{ fontWeight: 400 }}>Bạn có thể thích</Typography>
               <Box>
                 {booklist.map((data, index) => (
@@ -182,7 +200,7 @@ const Cart = (props) => {
                 ))}
               </Box>
 
-            </Box>
+            </Box> */}
 
           </Box>
         </>
