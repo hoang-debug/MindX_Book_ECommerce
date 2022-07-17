@@ -31,6 +31,13 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'flex-start'
+  },
+  label: {
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    display: "-webkit-box",
+    "-webkit-line-clamp": 2,
+    "-webkit-box-orient": "vertical"
   }
 }))
 
@@ -59,7 +66,7 @@ const Book2 = (props) => {
             paddingX={props.paddingX}
             paddingBottom={2}
           >
-            <Typography color='primary' variant="body2" style={{ fontWeight: '400', color: '#007185' }}>
+            <Typography color='primary' variant="body2" style={{ fontWeight: '400', color: 'black' }} className={classes.label}>
               {props.label}
             </Typography>
             {props.author &&

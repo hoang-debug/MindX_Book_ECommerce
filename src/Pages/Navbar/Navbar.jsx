@@ -1,4 +1,4 @@
-import { AppBar, Avatar, Badge, Box, Button, IconButton, InputBase, makeStyles, Slide, Toolbar, Typography, useScrollTrigger, useTheme } from "@material-ui/core"
+import { AppBar, Avatar, Badge, Box, Button, IconButton, InputBase, makeStyles, Slide, TextField, Toolbar, Typography, useScrollTrigger, useTheme } from "@material-ui/core"
 import { ArrowBack, Clear, ExpandMore, Search, ShoppingBasket, ShoppingBasketOutlined } from "@material-ui/icons"
 import React, { useEffect, useState } from "react"
 import LogoIcon from "../images/logo.png"
@@ -29,22 +29,24 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex'
     // display: (props) => (props.openSearch ? 'none' : 'flex'),
   },
+
   logoName: {
     display: 'block',
     fontWeight: theme.typography.fontWeightMedium,
     marginLeft: theme.spacing(1)
   },
   closeSearchButton: {
-    display: (props) => (props.openSearch ? 'block' : 'none'),
+    // display: (props) => (props.openSearch ? 'block' : 'none'),
     marginLeft: theme.spacing(2),
   },
   searchZone: {
-    display: (props) => (props.openSearch ? 'flex' : 'none'),
+    // display: (props) => (props.openSearch ? 'flex' : 'none'),
+    display: 'flex',
     alignItems: 'center',
-    backgroundColor: '#F1F3F4',
-    borderRadius: theme.shape.borderRadius,
+    // backgroundColor: '#F1F3F4',
+    // borderRadius: theme.shape.borderRadius,
     width: '40%',
-    paddingLeft: theme.spacing(1),
+    // paddingLeft: theme.spacing(1),
     // [MediaQuery.down('sm')]: {
     //     display: (props) => (props.openSearch ? 'flex' : 'none'),
     //     flexGrow: 1,
@@ -52,7 +54,8 @@ const useStyles = makeStyles((theme) => ({
     // },
     position: 'relative',
     flexGrow: 1,
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(2),
+    marginLeft: theme.spacing(4)
   },
   input: {
     flexGrow: 1,
@@ -104,11 +107,13 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: theme.typography.fontWeightMedium,
   },
   menuBar: {
-    display: (props) => (props.openSearch ? 'none' : 'flex'),
-    flexGrow: 1,
-    paddingLeft: theme.spacing(10),
+    // display: (props) => (props.openSearch ? 'none' : 'flex'),
+    display: 'flex',
+    // paddingLeft: theme.spacing(10),
+    marginLeft: theme.spacing(5),
     height: '100%',
-    gap: theme.spacing(3)
+    gap: theme.spacing(3),
+
   },
   menuBox: {
     position: 'relative',
@@ -142,7 +147,13 @@ const useStyles = makeStyles((theme) => ({
     color: 'black',
     textDecoration: 'none',
     fontWeight: 'normal'
-  }
+  },
+  logo: {
+    width: '50px',
+    height: '50px',
+    objectFit: 'cover',
+    objectPosition: '50% 400%'
+  },
 }))
 
 const HideOnScroll = (props) => {
@@ -192,9 +203,6 @@ const Navbar = (props) => {
   }
 
   const onInput = (event) => {
-    let cancel_button = document.getElementById('cancel')
-    if (event.target.value) cancel_button.style.display = 'block'
-    else cancel_button.style.display = 'none'
     setSearchValue(event.target.value)
   }
 
@@ -208,20 +216,35 @@ const Navbar = (props) => {
   const [badgeContent, setBadgeContent] = useState(0)
 
   useEffect(() => {
-    setBadgeContent(JSON.parse(localStorage.getItem('cart')).length)
-    console.log('badge', JSON.parse(localStorage.getItem('cart')).length)
+    setBadgeContent(JSON.parse(localStorage.getItem('cart'))?.length || 0)
+    console.log('badge', JSON.parse(localStorage.getItem('cart'))?.length || 0)
   });
 
+  const search = () => {
+    if (searchValue)
+      navigate(`/search/${searchValue}`)
+  }
 
   return (
     <div>
       <HideOnScroll {...props}>
         <AppBar color="default" className={classes.appBar}>
           <Toolbar className={classes.toolBar}>
+            <Box marginLeft={2} />
+
             <div className={classes.logoZone}>
               <Link to='/'>
                 <Box display='flex' alignItems='center'>
-                  <Avatar src={LogoIcon} />
+                  <img
+                    src={'https://res.cloudinary.com/ha-noi-science-and-techlonogy-university/image/upload/v1656736990/6902305_tne79l.png?fbclid=IwAR1B2eLt7nErZNVKTwfl1fVIbaR92srnar-maxw8T1itA26_vfCg7nWC8b8'}
+                    className={classes.logo}
+                  />
+                  {/* <Box
+                    width='50px'
+                    height='50px'
+                    style={{backgroundColor: 'yellow'}}
+                  /> */}
+                  <Box marginLeft={1}/>
                   <Typography style={{ cursor: "pointer" }} variant="h5" className={classes.logoName}>
                     Books
                   </Typography>
@@ -233,71 +256,30 @@ const Navbar = (props) => {
                 className={classes.menuBox}
                 onClick={handleExpandClick('menu-sach')}
               >
-                <Typography variant="body2">Thể loại</Typography>
+                <Typography variant="body2" component='div'>Thể loại</Typography>
                 <ExpandMore
                   className={classes.expandIcon}
                   style={{ display: (anchor[0] === 'menu-sach') ? 'block' : 'none' }}
                 />
               </div>
-              {/* <div
-                className={classes.menuBox}
-                onClick={handleExpandClick('menu-nap-credit')}
-              >
-                <Typography variant="body2">Nạp credit</Typography>
-                <ExpandMore
-                  className={classes.expandIcon}
-                  style={{ display: (anchor[0] === 'menu-nap-credit') ? 'block' : 'none' }}
-                />
-              </div> */}
-
-              {/* <div
-                className={classes.menuBox}
-                onClick={handleExpandClick('menu-nap-credit')}
-              >
-                <Typography variant="body2">Quyên góp sách</Typography>
-                <ExpandMore
-                  className={classes.expandIcon}
-                  style={{ display: (anchor[0] === 'menu-quyen-gop') ? 'block' : 'none' }}
-                />
-              </div> */}
-
-              {/* <div
-                className={classes.menuBox}
-                onClick={handleExpandClick('menu-gioi-thieu')}
-              >
-                <Typography variant="body2">Khuyến mại</Typography>
-                <ExpandMore
-                  className={classes.expandIcon}
-                  style={{ display: (anchor[0] === 'menu-gioi-thieu') ? 'block' : 'none' }}
-                />
-              </div> */}
-
-              {/* <div
-                className={classes.menuBox}
-                onClick={handleExpandClick('menu-gioi-thieu')}
-              >
-                <Typography variant="body2">Giới thiệu</Typography>
-                <ExpandMore
-                  className={classes.expandIcon}
-                  style={{ display: (anchor[0] === 'menu-gioi-thieu') ? 'block' : 'none' }}
-                />
-              </div> */}
-
-
 
             </div>
-            <IconButton className={classes.closeSearchButton} onClick={() => setOpenSearch(false)}>
-              <ArrowBack></ArrowBack>
-            </IconButton>
             <div className={classes.searchZone}>
-              <Link to={`/search/${searchValue}`}>
-                <IconButton><Search fontSize="small" /></IconButton>
-              </Link>
-              <InputBase id="input" placeholder="Tìm kiếm..." onInput={onInput} className={classes.input} value={searchValue} />
-              <IconButton id="cancel" onClick={deleteSearch} className={classes.cancel}><Clear fontSize="small" /></IconButton>
+              <TextField
+                size='small'
+                variant="outlined"
+                id="input"
+                placeholder="Tìm kiếm..."
+                onInput={onInput}
+                className={classes.input}
+                value={searchValue}
+                type='search'
+              />
+
             </div>
+
             <div className={classes.iconZone}>
-              <IconButton className={classes.searchIcon} onClick={() => setOpenSearch(true)}>
+              <IconButton className={classes.searchIcon} onClick={search}>
                 <Search></Search>
               </IconButton>
 
@@ -328,12 +310,13 @@ const Navbar = (props) => {
                 {props.signedIn ? (
                   <Avatar src={props.avatar_url} />
                 ) : (
-                  <Typography variant="body2" color="primary" onClick={signIn} style={{ cursor: 'pointer' }}>
+                  <Typography variant="body2" onClick={signIn} style={{ cursor: 'pointer', color: 'orange', fontWeight: 500 }}>
                     Sign in
                   </Typography>
                 )}
 
               </Box>
+              <Box marginLeft={0.1} />
             </div>
           </Toolbar>
           {/* <CategoryBar /> */}

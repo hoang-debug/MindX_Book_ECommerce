@@ -1,5 +1,6 @@
 import axios from "axios";
 import {HEROKU_API} from '../Constants/index'
+import { axiosPost } from "./axiosUtils";
 
 const login = async (username, password) => {
   const response = await axios.post(
@@ -15,6 +16,10 @@ const login = async (username, password) => {
   }
   return response.data;
 };
+
+const signup = async (username, password) => {
+  const response = await axiosPost()
+}
 const authService = {
   login,
 };

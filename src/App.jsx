@@ -17,10 +17,11 @@ import { common_variable } from "./Pages/common"
 import Login from "./Pages/Signin/CustomSignIn"
 import HomePage from './Pages/HomePage/HomePage'
 import DangVanChuyen from "./Pages/CheckOut/DangVanChuyen"
+import ForgetPassword from "./Pages/Signin/ForgetPassword/ForgetPassword"
 const useStyles = makeStyles((theme) => ({
   app: {
     width: '100%',
-    height: 'fit-content',
+    height: '100%',
     padding: 0,
     margin: 0,
     position: 'relative',
@@ -87,8 +88,9 @@ const App = () => {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/dang-van-chuyen" element={<DangVanChuyen />} />
         {/* <Route path="/signin" element={<Signin _setUserInfo={_setUserInfo} signedIn={signedIn} />} /> */}
-        <Route path="/signin" element={<Login _setUserInfo={_setUserInfo} />} />
+        <Route path="/signin" element={<Signin _setUserInfo={_setUserInfo} />} />
         <Route path="/confirm" element={<ConfirmPage />} />
+        <Route path="/forget-password/:step" element={<ForgetPassword/>}/>
       </Routes>
     </div>
 

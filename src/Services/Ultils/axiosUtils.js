@@ -28,8 +28,8 @@ export const axiosPost = async (url, params, isHeader = false) => {
   })
     .then(response => response.data)
     .catch(err => {
-      console.log(err)
-      return null
+      console.log(err.response)
+      return err.response.data
     })
 
   return result

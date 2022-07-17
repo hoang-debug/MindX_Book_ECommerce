@@ -1,9 +1,14 @@
-import { Box, Divider} from "@material-ui/core"
-import LoginBox from "./LoginBox"
-import RegisterBox from "./RegisterBox"
+import { Box, Divider } from "@material-ui/core"
+import { useEffect } from "react"
+import { useParams } from "react-router-dom"
+import LoginBox from "../LoginBox"
+import RegisterBox from "../RegisterBox"
+import PasswordStep1 from "./PasswordStep1"
+import PasswordStep2 from "./PasswordStep2"
 
-const Signin = ({ _setUserInfo }) => {
-
+const ForgetPassword = () => {
+  const { step } = useParams()
+  console.log(step)
   return (
     <Box
       width='100%'
@@ -22,15 +27,12 @@ const Signin = ({ _setUserInfo }) => {
         display='flex'
         justifyContent='space-evenly'
       >
-        <LoginBox _setUserInfo={_setUserInfo}/>
-        {/* <Box marginLeft={2}/>
-         */}
-        <Divider flexItem orientation="vertical"/>
-        <RegisterBox/>
+        {step === '1' && <PasswordStep1 />}
+        {step === '2' && <PasswordStep2 />}
       </Box>
 
     </Box>
   )
 }
 
-export default Signin
+export default ForgetPassword
