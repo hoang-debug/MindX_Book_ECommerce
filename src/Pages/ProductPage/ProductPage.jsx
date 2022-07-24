@@ -20,15 +20,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-let slider_item = {
-  newprice: '$10.00',
-  oldprice: '$12.00',
-  src: 'https://i2-prod.walesonline.co.uk/incoming/article6890072.ece/ALTERNATES/s615b/hp1.jpg',
-  details: [
-    '10 days left'
-  ]
-}
-
 class Specs {
   name
   code
@@ -47,7 +38,6 @@ class Specs {
   }
 }
 
-let slider_items = new Array(10).fill(slider_item)
 
 const ProductPage = (props) => {
   const classes = useStyles()
@@ -57,9 +47,11 @@ const ProductPage = (props) => {
   const [sameBooks, setSameBooks] = useState(null)
   const [comments, setComments] = useState([])
   const [allowComment, setAllowComment] = useState(true)
+  const [firstLoad, setFirstLoad] = useState(false)
   let { id } = useParams()
   const getComments = async () => {
     let response = await axiosGet(`${HEROKU_API}/books/${id}/comments`)
+    if (!response || !response.success) return
     const comments = response.data
     setComments(comments)
     console.log('comments', comments)
@@ -72,12 +64,18 @@ const ProductPage = (props) => {
   }
   const getSameBook = async (cate) => {
     let response = await axiosGet(`${HEROKU_API}/books?category=${cate}`)
+    if (!response || !response.success) return
     console.log('same cate', response.data)
     return response.data
   }
   const getBookDetails = async (id) => {
     console.log('book id:', id)
     let response = await axiosGet(`${HEROKU_API}/books/${id}`)
+    console.log(response)
+    if (!response || !response.success || !response.data) {
+      setFirstLoad(true)
+      return
+    }
     let data = response.data
     let details = {
       images: data.imageURL,
@@ -124,7 +122,7 @@ const ProductPage = (props) => {
     setDetails(details)
     // setSimilarBuy(convertBlockToLineRow(response.data.similar_buy_block).getObject())
     // setSimilarView(convertBlockToLineRow(response.data.similar_view_block).getObject())
-
+    setFirstLoad(true)
   }
   useEffect(() => {
     getBookDetails(id)
@@ -135,113 +133,129 @@ const ProductPage = (props) => {
   }
 
   return (
-    <Box
-      className={classes.root}
-      width='100%'
-      height='fit-content'
-      boxSizing='border-box'
-      paddingX={2}
-      paddingTop={11}
-    >
-      {!!details &&
+    <>
+      {!data && firstLoad &&
         <Box
-          id="firstpart"
+          width='100%'
+          display='flex'
+          justifyContent='center'
+          paddingTop={15}
+        >
+          <Typography variant='h5'>Sách bạn đang tìm không tồn tại</Typography>
+        </Box>
+      }
+      {data &&
+        <Box
+          className={classes.root}
           width='100%'
           height='fit-content'
-          display='flex'
-          justifyContent='space-between'
           boxSizing='border-box'
+          paddingX={2}
+          paddingTop={11}
         >
-          <BookImage
-            smallImages={details.images}
-          />
-          <Box marginLeft={2} />
-          <BookDetails
-            authors={details.authors}
-            desc={details.desc}
-            // list_price={details.list_price}
-            // price={details.price}
-            quantity_sold={details.quantity_sold}
-            rating={details.rating}
-            review_count={details.review_count}
-            title={details.title}
-            specs={details.specs}
-            buyOptionIndex={buyOptionIndex}
-            clickBuyOption={clickBuyOption}
-          // buyOptions={data.buy_options}
-          //.filter(option => option.price)
-          />
-          <Box marginLeft={2} />
-          <PriceBox
-            price={details.price}
-            smallImages={details.images}
-            setRefreshNavbar={props.setRefreshNavbar}
-          />
+          {!!details &&
+            <Box
+              id="firstpart"
+              width='100%'
+              height='fit-content'
+              display='flex'
+              justifyContent='space-between'
+              boxSizing='border-box'
+            >
+              <BookImage
+                smallImages={details.images}
+              />
+              <Box marginLeft={2} />
+              <BookDetails
+                authors={details.authors}
+                desc={details.desc}
+                // list_price={details.list_price}
+                // price={details.price}
+                quantity_sold={details.quantity_sold}
+                rating={details.rating}
+                review_count={details.review_count}
+                title={details.title}
+                specs={details.specs}
+                buyOptionIndex={buyOptionIndex}
+                clickBuyOption={clickBuyOption}
+              // buyOptions={data.buy_options}
+              //.filter(option => option.price)
+              />
+              <Box marginLeft={2} />
+              <PriceBox
+                price={details.price}
+                smallImages={details.images}
+                setRefreshNavbar={props.setRefreshNavbar}
+              />
+
+            </Box>
+          }
+
+          {/* <Box marginY={2}><Divider /></Box> */}
+
+          {/* <BoughtTogether /> */}
+
+          <Box marginTop={2}><Divider /></Box>
+          {sameBooks &&
+            <Box width='100%'>
+              <ItemSlider
+                items={sameBooks.items}
+                label={sameBooks.label}
+                link={sameBooks.link}
+                maxWidth='none'
+              />
+              <Box><Divider /></Box>
+            </Box>
+          }
+
+
+          {!!details &&
+            <Box
+              display='flex'
+              paddingBottom={4}
+            >
+
+              <CustomerRatings stars={details.rating} votes={numberWithCommas(details.review_count)} getBookDetails={() => getBookDetails(id)} allowComment={allowComment} />
+
+              <Divider flexItem orientation="vertical" />
+              <Box
+                width='75%'
+                marginLeft={2}
+                paddingTop={2}
+              >
+                <Typography variant='h5'>Bình luận</Typography>
+                <Box marginTop={2} />
+                {comments.map((comment, key) => (
+                  <Fragment key={key}>
+                    <Box marginTop={1.5} />
+                    <Review
+                      username={comment.createdBy.username}
+                      stars={comment.stars}
+                      details={comment.content}
+                    />
+                    <Box marginTop={1.5} />
+                  </Fragment>
+                ))}
+
+                {comments.length === 0 &&
+                  <Typography>Chưa có bình luận nào :(</Typography>
+                }
+
+                {/* <Divider /> */}
+                <Box marginTop={1} />
+                {/* <Button color="primary" size='small'>Xem tất cả đánh giá &nbsp;{'>'}</Button> */}
+                <Box marginTop={3} />
+
+              </Box>
+            </Box>
+          }
+
 
         </Box>
       }
-
-      {/* <Box marginY={2}><Divider /></Box> */}
-
-      {/* <BoughtTogether /> */}
-
-      <Box marginTop={2}><Divider /></Box>
-      {sameBooks &&
-        <Box width='100%'>
-          <ItemSlider
-            items={sameBooks.items}
-            label={sameBooks.label}
-            link={sameBooks.link}
-            maxWidth='none'
-          />
-          <Box><Divider /></Box>
-        </Box>
-      }
+    </>
 
 
-      {!!details &&
-        <Box
-          display='flex'
-          paddingBottom={4}
-        >
-
-          <CustomerRatings stars={details.rating} votes={numberWithCommas(details.review_count)} getBookDetails={() => getBookDetails(id)} allowComment={allowComment}/>
-
-          <Divider flexItem orientation="vertical" />
-          <Box
-            width='75%'
-            marginLeft={2}
-            paddingTop={2}
-          >
-            <Typography variant='h5'>Bình luận</Typography>
-            <Box marginTop={2} />
-            {comments.map((comment, key) => (
-              <Fragment key={key}>
-                <Box marginTop={1.5} />
-                <Review
-                  username={comment.createdBy.username}
-                  stars={comment.stars}
-                  details={comment.content}
-                />
-                <Box marginTop={1.5} />
-              </Fragment>
-            ))}
-
-            {comments.length === 0 &&
-              <Typography>Chưa có bình luận nào :(</Typography>
-            }
-
-            {/* <Divider /> */}
-            <Box marginTop={1} />
-            {/* <Button color="primary" size='small'>Xem tất cả đánh giá &nbsp;{'>'}</Button> */}
-            <Box marginTop={3} />
-
-          </Box>
-        </Box>
-      }
-
-
-    </Box>
   )
 }
 

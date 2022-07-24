@@ -18,6 +18,12 @@ import Login from "./Pages/Signin/CustomSignIn"
 import HomePage from './Pages/HomePage/HomePage'
 import DangVanChuyen from "./Pages/CheckOut/DangVanChuyen"
 import ForgetPassword from "./Pages/Signin/ForgetPassword/ForgetPassword"
+import AdminPage from "./Pages/AdminPage/AdminPage"
+import AddBookPage from "./Pages/AdminPage/AddBookPage/AddBookPage"
+import UpdateBookPage from "./Pages/AdminPage/UpdateBookPage/UpdateBookPage"
+import OrderPage from "./Pages/AdminPage/OrderPage.jsx/OrderPage"
+import { Typography } from "@material-ui/core"
+
 const useStyles = makeStyles((theme) => ({
   app: {
     width: '100%',
@@ -57,6 +63,7 @@ const App = () => {
     console.log('data', info)
     setSignedIn(true)
     setUserInfo(info)
+    localStorage.setItem('access_token', info.token)
     // let response = await axiosGet(`${HEROKU_API}/cart`, null, true)
     // let cart = response.data.sellProducts.map((item) => {
     //   return {
@@ -72,16 +79,16 @@ const App = () => {
   }, [signedIn])
 
   const [refreshNavbar, setRefreshNavbar] = useState(false)
-  
+
 
   return (
     <div className={classes.app}>
-      <Navbar signedIn={signedIn} refresh={refreshNavbar}/>
+      <Navbar signedIn={signedIn} refresh={refreshNavbar} />
       <Routes>
-        <Route path="*" element={<HomePage />} />
+        <Route path='/' element={<HomePage />} />
         <Route path="/book-page/:idCategory" element={<BookPage />} />
-        <Route path="/cart" element={<CartPage setRefreshNavbar={setRefreshNavbar}/>} />
-        <Route path="/product/:id" element={<ProductPage setRefreshNavbar={setRefreshNavbar} userInfo={userInfo}/>} />
+        <Route path="/cart" element={<CartPage setRefreshNavbar={setRefreshNavbar} />} />
+        <Route path="/product/:id" element={<ProductPage setRefreshNavbar={setRefreshNavbar} userInfo={userInfo} />} />
         <Route path="/search/:keyword" element={<SearchResult />} />
         <Route path="/chon-dia-chi" element={<ChooseAddress />} />
         <Route path="/thanh-toan" element={<ThanhToan />} />
@@ -90,7 +97,19 @@ const App = () => {
         {/* <Route path="/signin" element={<Signin _setUserInfo={_setUserInfo} signedIn={signedIn} />} /> */}
         <Route path="/signin" element={<Signin _setUserInfo={_setUserInfo} />} />
         <Route path="/confirm" element={<ConfirmPage />} />
-        <Route path="/forget-password/:step" element={<ForgetPassword/>}/>
+        <Route path="/forget-password/:step" element={<ForgetPassword />} />
+        {/* <Route path="/admin/:procedure" element={<AdminPage />} /> */}
+        {/* <Route path="/admin" element={<Navigate to='/admin/add-book' />} >
+
+        </Route> */}
+        <Route path="/admin" element={<Navigate to='/admin/add-book' />} />
+
+        <Route path="/admin" element={<AdminPage />}>
+          <Route path="add-book" element={<AddBookPage />} />
+          <Route path="update-book" element={<UpdateBookPage />} />
+          <Route path="order-page/:status" element={<OrderPage />} />
+          <Route path="order-page" element={<Navigate to='unprocessed' />} />
+        </Route>
       </Routes>
     </div>
 

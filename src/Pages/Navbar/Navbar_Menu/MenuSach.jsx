@@ -1,4 +1,4 @@
-import { Button, ClickAwayListener, Container, Divider, Grid, List, ListItem, ListItemText, makeStyles, Paper, Popper, Typography } from "@material-ui/core";
+import { Box, Button, ClickAwayListener, Container, Divider, Grid, List, ListItem, ListItemText, makeStyles, Paper, Popper, Typography } from "@material-ui/core";
 import { ChevronRight, Clear } from "@material-ui/icons";
 import { useTheme } from "@material-ui/styles";
 import { useEffect, useState } from 'react'
@@ -9,7 +9,7 @@ import { axiosGet } from "../../../Services/Ultils/axiosUtils";
 const useStyles = makeStyles((theme) => ({
   menu: {
     width: '100vw',
-    height: 'calc(100vh - 200px)',
+    height: '350px',
     position: 'relative',
   },
   container: {
@@ -127,12 +127,44 @@ const MenuSach = (props) => {
       disablePortal
       modifiers={{ preventOverflow: { padding: 0 } }}
     >
-      <Paper>
+      <Paper
+        square
+        elevation={3}
+      >
         <ClickAwayListener onClickAway={props.handleCloseMenu}>
           <div className={classes.menu}>
             <Clear className={classes.exitIcon} onClick={props.handleCloseMenu}></Clear>
-            <Grid container className={classes.container}>
-              <Grid item xs={1}/>
+            <Box
+              width='100%'
+              height='100%'
+              display='flex'
+              flexWrap='wrap'
+              alignContent='flex-start'
+              justifyContent='center'
+              boxSizing='border-box'
+              paddingTop={4}
+              paddingLeft={15}
+              gridColumnGap={10}
+            >
+              {categoriesV2.map((cv2, index) => (
+                <Box
+                  width='30%'
+                  height='50px'
+                  key={index}
+                >
+                  <Link key={index} to={`/book-page/${cv2.idCategory}`}>
+                    <Typography
+                      variant="body2"
+                      className={cv2.idCategory === cateIdV2 ? classes.linkActive : classes.linkInActive}
+                      onClick={onClickCategoryV2(cv2.idCategory)}
+                    >
+                      {cv2.name}
+                    </Typography>
+                  </Link>
+                </Box>
+              ))}
+            </Box>
+            {/* <Grid container className={classes.container}>
               <Grid item xs={10} className={classes.rightMenu}>
                 <Grid container className={classes.categoryContainer} direction='column'>
                   {categoriesV2.map((cv2, index) => (
@@ -151,7 +183,8 @@ const MenuSach = (props) => {
                 </Grid>
               </Grid>
               <Grid item xs={1}/>
-            </Grid>
+            </Grid> */}
+
           </div>
         </ClickAwayListener>
       </Paper>
@@ -166,3 +199,13 @@ MenuSach.defaultProps = {
 }
 
 export default MenuSach
+
+{/* <Link key={index} to={`/book-page/${cv2.idCategory}`}>
+                        <Typography
+                          variant="body2"
+                          className={cv2.idCategory === cateIdV2 ? classes.linkActive : classes.linkInActive}
+                          onClick={onClickCategoryV2(cv2.idCategory)}
+                        >
+                          {cv2.name}
+                        </Typography>
+                      </Link> */}

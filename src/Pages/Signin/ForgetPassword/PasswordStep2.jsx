@@ -29,10 +29,10 @@ const PasswordStep2 = () => {
   const send = async (e) => {
     e.preventDefault()
     let response = await axiosPost(`${HEROKU_API}/auth/confirm/forgot`, {
-      "email":email,
-      "code":Number(code),
-      "password":password1,
-      "confirmPassword":password2
+      "email": email,
+      "code": Number(code),
+      "password": password1,
+      "confirmPassword": password2
     })
     console.log(response)
     if (!response.success) setError(response.message)
@@ -47,7 +47,7 @@ const PasswordStep2 = () => {
       <Box
         boxSizing='border-box'
         width='420px'
-        height='450px'
+        height='fit-content'
         style={{ backgroundColor: 'white' }}
         borderRadius='5px'
         padding={4}
@@ -153,12 +153,22 @@ const PasswordStep2 = () => {
 
         <Box marginTop={2} />
 
-        <OrangeButton
-          fullWidth
-          type='submit'
-        >
-          Gửi
-        </OrangeButton>
+        {success ?
+          <OrangeButton
+            fullWidth
+            onClick={()=>{navigate('/signin')}}
+          >
+            quay về trang đăng nhập
+          </OrangeButton>
+          :
+          <OrangeButton
+            fullWidth
+            type='submit'
+            disabled={success}
+          >
+            Gửi
+          </OrangeButton>
+        }
 
       </Box>
     </form >

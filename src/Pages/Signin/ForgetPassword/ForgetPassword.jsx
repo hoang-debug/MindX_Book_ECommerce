@@ -17,7 +17,7 @@ const ForgetPassword = () => {
         // backgroundImage: 'url("https://wallpapercrafter.com/th800/221212-book-market-book-sale-and-bookstore-hd.jpg")',
         // backgroundPosition: 'center',
         // backgroundSize: 'cover',
-        backgroundColor: '#F9FCD6'
+        backgroundColor: '#F4F3EC'
       }}
       boxSizing='border-box'
       paddingTop={8}

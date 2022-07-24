@@ -1,4 +1,4 @@
-import { AppBar, Avatar, Badge, Box, Button, IconButton, InputBase, makeStyles, Slide, TextField, Toolbar, Typography, useScrollTrigger, useTheme } from "@material-ui/core"
+import { AppBar, Avatar, Badge, Box, Button, IconButton, InputBase, makeStyles, Menu, MenuItem, Slide, TextField, Toolbar, Typography, useScrollTrigger, useTheme } from "@material-ui/core"
 import { ArrowBack, Clear, ExpandMore, Search, ShoppingBasket, ShoppingBasketOutlined } from "@material-ui/icons"
 import React, { useEffect, useState } from "react"
 import LogoIcon from "../images/logo.png"
@@ -225,6 +225,20 @@ const Navbar = (props) => {
       navigate(`/search/${searchValue}`)
   }
 
+  const [avaMenu, setAvaMenu] = useState(null)
+  const openAvaMenu = (e) => {
+    setAvaMenu(e.currentTarget)
+  }
+
+  const closeAvaMenu = (e) => {
+    setAvaMenu(null)
+  }
+
+  const logout = () => {
+    localStorage.setItem('access_token', '')
+    window.location.reload()
+  }
+
   return (
     <div>
       <HideOnScroll {...props}>
@@ -244,7 +258,7 @@ const Navbar = (props) => {
                     height='50px'
                     style={{backgroundColor: 'yellow'}}
                   /> */}
-                  <Box marginLeft={1}/>
+                  <Box marginLeft={1} />
                   <Typography style={{ cursor: "pointer" }} variant="h5" className={classes.logoName}>
                     Books
                   </Typography>
@@ -295,20 +309,28 @@ const Navbar = (props) => {
                   )}
                 </NavLink>
               </Box>
-              {/* <Box className={classes.tabBox}>
-                <Typography variant="body2">
-                  5 stars
-                </Typography>
-              </Box> */}
-              {/* <Box className={classes.tabBox}>
-                <Typography variant="body2">
-                  10.000.000đ
-                </Typography>
-              </Box> */}
 
               <Box className={classes.tabBox}>
                 {props.signedIn ? (
-                  <Avatar src={props.avatar_url} />
+                  <>
+                    <Avatar src={props.avatar_url} onClick={openAvaMenu} />
+                    <Menu
+                      anchorEl={avaMenu}
+                      open={!!avaMenu}
+                      onClose={closeAvaMenu}
+                      onMouseLeave={() => { closeAvaMenu() }}
+                    >
+                      <Link to='/admin'>
+                        <MenuItem>
+                          <span style={{ color: 'purple' }}>ADMIN</span>
+                        </MenuItem>
+                      </Link>
+                      <MenuItem onClick={logout}>
+                        <span style={{ color: 'red' }}>Đăng xuất</span>
+                      </MenuItem>
+
+                    </Menu>
+                  </>
                 ) : (
                   <Typography variant="body2" onClick={signIn} style={{ cursor: 'pointer', color: 'orange', fontWeight: 500 }}>
                     Sign in

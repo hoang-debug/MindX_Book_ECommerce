@@ -1,6 +1,6 @@
 import { Button, styled } from "@material-ui/core";
 
-export const WhiteButton = styled(Button)(() => ({
+export const WhiteButton = styled(Button)(({ width }) => ({
   backgroundColor: 'transparent',
   color: 'black',
   '&:hover': {
@@ -8,5 +8,7 @@ export const WhiteButton = styled(Button)(() => ({
     color: 'white'
   },
   borderRadius: 0,
-  border: '1px solid black'
+  border: '1px solid black',
+  width: width
+
 }))

@@ -70,3 +70,21 @@ export const axiosPatch = async (url, params, isHeader = false) => {
 
   return result
 }
+
+export const axiosPut = async (url, params, isHeader = false) => {
+  let result = await axios({
+    method: 'put',
+    url: url,
+    data: params ? params : null,
+    headers: isHeader ? {
+      "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+    } : null
+  })
+    .then(response => response.data)
+    .catch(err => {
+      console.log(err)
+      return null
+    })
+
+  return result
+}
