@@ -23,12 +23,12 @@ const OrderStatusBar = () => {
   return (
     <Paper 
       square 
-      style={{ 
-        width: '100%',
+      style={{
+        // width: '100%',
         position: '-webkit-sticky',
         position: 'sticky',
         top: trigger ? 0 : 64,
-        zIndex: 1000
+        zIndex: 1000,
       }}
     >
       <Tabs
@@ -36,14 +36,15 @@ const OrderStatusBar = () => {
         indicatorColor="primary"
         textColor="primary"
         onChange={handleChange}
-        variant="fullWidth"
-        scrollButtons="on"
+        // variant="fullWidth"
+        style={{minWidth: '0px'}}
+        centered
       >
         {BUY_STATUS.map((status) =>
           <Tab
             key={`${status}`}
             label={`${BUY_STATUS_VN[status]}`}
-            // style={{ width: '200px' }}
+            style={{width: '25%', minWidth: 0}}
             onClick={() => { navigate(`/admin/order-page/${status}`) }}
           />
         )}

@@ -1,5 +1,4 @@
 import { Box, Divider, makeStyles, Typography } from "@material-ui/core";
-import { BASE_FILE } from "../../Services/Constants";
 import SeeAllImage from "./SeeAllImage";
 
 const useStyles = makeStyles((theme) => ({

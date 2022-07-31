@@ -169,12 +169,12 @@ const ShipAddress = (props) => {
       street,
     }
     console.log('new address', new_address)
-    localStorage.setItem('cart', JSON.stringify([]))
-    await axiosPost(`${HEROKU_API}/bill`, {
+    let response = await axiosPost(`${HEROKU_API}/bill`, {
       "sellProducts": JSON.parse(localStorage.getItem('cart')),
-      "address": JSON.stringify(new_address),
-      "phoneNumber": "0965976864"
+      "address": new_address,
     }, true)
+    if (!response || !response.success) return
+    localStorage.setItem('cart', JSON.stringify([]))
     if (prev === PrevChooseAddress.SHIP_DINH_GIA) navigate('/dang-van-chuyen', { state: { user_address: new_address } })
     else if (prev === PrevChooseAddress.CHECK_OUT) navigate('/dang-van-chuyen', { state: { user_address: new_address } })
   }

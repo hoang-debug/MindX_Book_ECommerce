@@ -12,9 +12,11 @@ const AdminPage = () => {
       style={{ backgroundColor: '#f1f1f1' }}
       display='flex'
       position='relative'
+      paddingBottom={2}
+      boxSizing='border-box'
     >
       <SideBar />
-      <Box minWidth='200px' />
+      <Box minWidth='200px' width='200px'/>
       <Outlet/>
     </Box>
   )

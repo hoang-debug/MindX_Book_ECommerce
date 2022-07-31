@@ -46,7 +46,7 @@ const calcPercent = (num1, num2) => {
 
 function TransitionLeft(props) {
   return (
-    <Slide {...props} direction="left">
+    <Slide {...props} direction="right">
       <Alert
         severity="success"
         elevation={6} variant="filled"
@@ -198,7 +198,7 @@ const PriceBox = ({ smallImages, price, setRefreshNavbar }) => {
         open={openAlert}
         autoHideDuration={5000}
         onClose={() => { setOpenAlert(false) }}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
         TransitionComponent={TransitionLeft}
       >
 
