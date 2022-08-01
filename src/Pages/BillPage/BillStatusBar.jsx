@@ -2,9 +2,9 @@ import { Box, Paper, Tab, Tabs, Typography, useScrollTrigger } from "@material-u
 import { useEffect } from "react"
 import { useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { BUY_STATUS, BUY_STATUS_VN } from "../../../Services/Constants"
+import { BUY_STATUS, BUY_STATUS_VN } from "../../Services/Constants"
 
-const OrderStatusBar = () => {
+const BillStatusBar = () => {
 
   const navigate = useNavigate()
   const { status } = useParams()
@@ -45,7 +45,7 @@ const OrderStatusBar = () => {
             key={`${status}`}
             label={`${BUY_STATUS_VN[status]}`}
             style={{width: '25%', minWidth: 0}}
-            onClick={() => { navigate(`/admin/order-page/${status}`) }}
+            onClick={() => { navigate(`/bill/${status}`) }}
           />
         )}
       </Tabs>
@@ -53,4 +53,4 @@ const OrderStatusBar = () => {
   )
 }
 
-export default OrderStatusBar
+export default BillStatusBar

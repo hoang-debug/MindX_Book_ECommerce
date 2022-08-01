@@ -23,11 +23,13 @@ import AddBookPage from "./Pages/AdminPage/AddBookPage/AddBookPage"
 import UpdateBookPage from "./Pages/AdminPage/UpdateBookPage/UpdateBookPage"
 import OrderPage from "./Pages/AdminPage/OrderPage.jsx/OrderPage"
 import { Typography } from "@material-ui/core"
+import BillPage from "./Pages/BillPage/BillPage"
 
 const useStyles = makeStyles((theme) => ({
   app: {
     width: '100%',
-    height: '100%',
+    height: 'fit-content',
+    minHeight: '100vh',
     padding: 0,
     margin: 0,
     position: 'relative',
@@ -41,22 +43,20 @@ const App = () => {
   const classes = useStyles()
   const [userInfo, setUserInfo] = useState(null)
   const [signedIn, setSignedIn] = useState(false)
-
-  // useEffect(() => {
-  //   const checkLogin = async () => {
-  //     let url = `${BASE_API}/users`
-  //     let response = await axiosGet(url, null, true)
-  //     console.log('check login', response)
-  //     if (response !== null) {
-  //       setSignedIn(true)
-  //       setUserInfo(response.data)
-  //     }
-  //   }
-  //   // checkLogin()
-  // }, [])
+  const [checkLogin, setCheckLogin] = useState(false)
 
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify([]))
+    const checkLogin = async () => {
+      let url = `${HEROKU_API}/auth/verify`
+      let response = await axiosGet(url, null, true)
+      console.log('check login', response)
+      if (response !== null && response.success) {
+        setSignedIn(true)
+        setUserInfo(response.data)
+      }
+      setCheckLogin(true)
+    }
+    checkLogin()
   }, [])
 
   const _setUserInfo = async (info) => {
@@ -86,31 +86,39 @@ const App = () => {
 
 
   return (
-    <div className={classes.app}>
-      <Navbar signedIn={signedIn} refresh={refreshNavbar} />
-      <Routes>
-        <Route path='/' element={<HomePage />} />
-        <Route path="/book-page/:idCategory" element={<BookPage />} />
-        <Route path="/cart" element={<CartPage setRefreshNavbar={setRefreshNavbar} />} />
-        <Route path="/product/:id" element={<ProductPage setRefreshNavbar={setRefreshNavbar} userInfo={userInfo} />} />
-        <Route path="/search/:keyword" element={<SearchResult />} />
-        <Route path="/chon-dia-chi" element={<ChooseAddress />} />
-        <Route path="/thanh-toan" element={<ThanhToan />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/dang-van-chuyen" element={<DangVanChuyen />} />
-        <Route path="/signin" element={<Signin _setUserInfo={_setUserInfo} />} />
-        <Route path="/confirm" element={<ConfirmPage />} />
-        <Route path="/forget-password/:step" element={<ForgetPassword />} />
+    <>
+      {checkLogin &&
+        <div className={classes.app}>
+          <Navbar signedIn={signedIn} refresh={refreshNavbar} userInfo={userInfo} />
+          <Routes>
+            <Route path='/' element={<HomePage />} />
+            <Route path="/book-page/:idCategory" element={<BookPage />} />
+            <Route path="/cart" element={<CartPage setRefreshNavbar={setRefreshNavbar} />} />
+            <Route path="/product/:id" element={<ProductPage setRefreshNavbar={setRefreshNavbar} userInfo={userInfo} />} />
+            <Route path="/search/:keyword" element={<SearchResult />} />
+            <Route path="/chon-dia-chi" element={<ChooseAddress />} />
+            <Route path="/thanh-toan" element={<ThanhToan />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/dang-van-chuyen" element={<DangVanChuyen />} />
+            <Route path="/signin" element={<Signin _setUserInfo={_setUserInfo} />} />
+            <Route path="/confirm" element={<ConfirmPage />} />
+            <Route path="/forget-password/:step" element={<ForgetPassword />} />
 
-        <Route path="/admin" element={<Navigate to='/admin/add-book' />} />
-        <Route path="/admin" element={<AdminPage />}>
-          <Route path="add-book" element={<AddBookPage />} />
-          <Route path="update-book" element={<UpdateBookPage />} />
-          <Route path="order-page/:status" element={<OrderPage />} />
-          <Route path="order-page" element={<Navigate to='unprocessed' />} />
-        </Route>
-      </Routes>
-    </div>
+            <Route path="/admin" element={<Navigate to='/admin/add-book' />} />
+            <Route path="/admin" element={<AdminPage userInfo={userInfo} />}>
+              <Route path="add-book" element={<AddBookPage />} />
+              <Route path="update-book" element={<UpdateBookPage />} />
+              <Route path="order-page/:status" element={<OrderPage />} />
+              <Route path="order-page" element={<Navigate to='unprocessed' />} />
+            </Route>
+
+            <Route path="/bill" element={<Navigate to='/bill/unprocessed' />} />
+            <Route path="/bill/:status" element={<BillPage userInfo={userInfo} />} />
+
+          </Routes>
+        </div>
+      }
+    </>
 
   )
 }

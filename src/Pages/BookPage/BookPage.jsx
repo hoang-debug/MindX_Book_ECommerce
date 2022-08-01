@@ -1,7 +1,7 @@
 import { Box, makeStyles, Typography } from "@material-ui/core";
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useParams, useSearchParams } from "react-router-dom";
-import { BASE_API, BASE_FILE, HEROKU_API } from "../../Services/Constants";
+import { HEROKU_API } from "../../Services/Constants";
 import ItemSlider from "../HomePage/Slider/ItemSlider";
 import Loading from "../Loading";
 import { axiosGet } from "../../Services/Ultils/axiosUtils";

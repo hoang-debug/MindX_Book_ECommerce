@@ -28,12 +28,12 @@ const LoginBox = ({_setUserInfo}) => {
       username: username,
       password: password
     })
+    console.log(response)
     if (!response.success) setError(response.message)
     else {
       _setUserInfo({...response.data, 'username': username})
       navigate('/')
     }
-    console.log(response)
   }
 
   return (

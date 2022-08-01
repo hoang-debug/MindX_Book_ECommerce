@@ -31,7 +31,7 @@ const SideBar = () => {
     <Box
       width='200px'
       height='100vh'
-      style={{ backgroundColor: '#23282D' }}
+      style={{ backgroundColor: '#23282D', zIndex: 1001 }}
       position='fixed'
       top='0px'
       boxSizing='border-box'

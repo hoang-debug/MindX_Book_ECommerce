@@ -32,18 +32,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const smallimages = [
-  'https://images-na.ssl-images-amazon.com/images/I/81PiNiKPESL.jpg',
-  'https://images-na.ssl-images-amazon.com/images/I/61m1Vxw8tiL.jpg',
-  'https://images-na.ssl-images-amazon.com/images/I/71Pt7z-Dt6L.jpg',
-  'https://images-na.ssl-images-amazon.com/images/I/81a4PaoziAL.jpg'
-]
-
-const calcPercent = (num1, num2) => {
-  if (!num1 || !num2) return null
-  return (100 - num1 / num2 * 100).toFixed(0)
-}
-
 function TransitionRight(props) {
   return (
     <Slide {...props} direction="right">
@@ -56,8 +44,6 @@ function TransitionRight(props) {
     </Slide>
   )
 }
-
-
 
 const PriceBox = ({ smallImages, price, setRefreshNavbar }) => {
   const classes = useStyles()

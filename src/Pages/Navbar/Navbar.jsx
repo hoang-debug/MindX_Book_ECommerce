@@ -320,9 +320,17 @@ const Navbar = (props) => {
                       onClose={closeAvaMenu}
                       onMouseLeave={() => { closeAvaMenu() }}
                     >
-                      <Link to='/admin'>
+                      {!!props.userInfo && props.userInfo.isAdmin &&
+                        <Link to='/admin'>
+                          <MenuItem>
+                            <span style={{ color: 'purple' }}>ADMIN</span>
+                          </MenuItem>
+                        </Link>
+                      }
+
+                      <Link to='/bill'>
                         <MenuItem>
-                          <span style={{ color: 'purple' }}>ADMIN</span>
+                          <span >Đơn mua</span>
                         </MenuItem>
                       </Link>
                       <MenuItem onClick={logout}>
