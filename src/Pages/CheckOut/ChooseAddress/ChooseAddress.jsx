@@ -179,64 +179,9 @@ const ShipAddress = (props) => {
     else if (prev === PrevChooseAddress.CHECK_OUT) navigate('/dang-van-chuyen', { state: { user_address: new_address } })
   }
 
-  const deleteAddress = (_id) => async (event) => {
-    await axiosDelete(`${BASE_API}/users/addresses/${_id}`, null, true)
-    getUserAddresses()
-    clearAddressInput()
-    setUpdate(false)
-  }
-
-  const onClickUpdateAddress = (address) => (event) => {
-    setAddressID(address._id)
-    setName(address.name)
-    setMobile(address.mobile)
-    setProvince(address.province)
-    setDistrict(address.district)
-    setWard(address.ward)
-    setStreet(address.street)
-    setUpdate(true)
-    document.getElementById('name').focus()
-  }
-
   const exitUpdate = () => {
     clearAddressInput()
     setUpdate(false)
-  }
-
-  const updateAddress = async (event) => {
-    event.preventDefault()
-    const updated_address = {
-      name,
-      mobile,
-      province,
-      district,
-      ward,
-      street,
-      is_office: true
-    }
-    const old_address = addressList.find(address => address._id === addressID)
-    let all_fields = ['name', 'mobile', 'province', 'district', 'ward', 'street', 'is_office']
-    let updated_fields = all_fields.filter(field => old_address[field] !== updated_address[field])
-    console.log(updated_fields)
-    updated_fields.map(async (field) => {
-      await axiosPatch(`${BASE_API}/users/addresses/${addressID}`, {
-        field_name: field,
-        value: updated_address[field]
-      }, true)
-    })
-    // await axiosDelete(`${BASE_API}/users/addresses/${addressID}`, null, true)
-    // await axiosPost(`${BASE_API}/users/addresses`, updated_address, true)
-
-    exitUpdate()
-    getUserAddresses()
-  }
-
-
-  const chooseAddress = (address) => (e) => {
-    console.log(address, state)
-    console.log('prev', prev)
-    if (prev === PrevChooseAddress.SHIP_DINH_GIA) navigate('/dang-van-chuyen', { state: { user_address: address } })
-    else if (prev === PrevChooseAddress.CHECK_OUT) navigate('/thanh-toan', { state: { user_address: address } })
   }
 
 

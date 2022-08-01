@@ -99,6 +99,7 @@ const Cart = (props) => {
     let index = items.findIndex(item => item.book === id)
     items.splice(index, 1)
     localStorage.setItem('cart', JSON.stringify(items))
+    await axiosPost(`${HEROKU_API}/cart`, items, true)
     setItems(items)
     props.setRefreshNavbar(prev => !prev)
   }
@@ -108,6 +109,7 @@ const Cart = (props) => {
     let index = items.findIndex(item => item.book === id)
     items[index].qualityBook = amount
     localStorage.setItem('cart', JSON.stringify(items))
+    await axiosPost(`${HEROKU_API}/cart`, items, true)
     setItems(items)
   }
 
@@ -118,8 +120,6 @@ const Cart = (props) => {
   const checkOut = () => {
     navigate('/chon-dia-chi', { state: { prev: PrevChooseAddress.CHECK_OUT } })
   }
-
- 
 
   return (
     <Box

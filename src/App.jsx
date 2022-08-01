@@ -64,14 +64,18 @@ const App = () => {
     setSignedIn(true)
     setUserInfo(info)
     localStorage.setItem('access_token', info.token)
-    // let response = await axiosGet(`${HEROKU_API}/cart`, null, true)
-    // let cart = response.data.sellProducts.map((item) => {
-    //   return {
-    //     book: item.book,
-    //     qualityBook: item.qualityBook
-    //   }
-    // }) || []
-    // localStorage.setItem('cart', JSON.stringify([]))
+    let response = await axiosGet(`${HEROKU_API}/cart`, null, true)
+    let cart = []
+    if (response.success)
+      cart = response.data.sellProducts.map((item) => {
+        return {
+          book: item.book,
+          qualityBook: item.qualityBook
+        }
+      })
+    console.log('cart', cart)
+    localStorage.setItem('cart', JSON.stringify(cart))
+    setRefreshNavbar(prev => !prev)
   }
 
   useEffect(() => {
@@ -94,16 +98,11 @@ const App = () => {
         <Route path="/thanh-toan" element={<ThanhToan />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/dang-van-chuyen" element={<DangVanChuyen />} />
-        {/* <Route path="/signin" element={<Signin _setUserInfo={_setUserInfo} signedIn={signedIn} />} /> */}
         <Route path="/signin" element={<Signin _setUserInfo={_setUserInfo} />} />
         <Route path="/confirm" element={<ConfirmPage />} />
         <Route path="/forget-password/:step" element={<ForgetPassword />} />
-        {/* <Route path="/admin/:procedure" element={<AdminPage />} /> */}
-        {/* <Route path="/admin" element={<Navigate to='/admin/add-book' />} >
 
-        </Route> */}
         <Route path="/admin" element={<Navigate to='/admin/add-book' />} />
-
         <Route path="/admin" element={<AdminPage />}>
           <Route path="add-book" element={<AddBookPage />} />
           <Route path="update-book" element={<UpdateBookPage />} />

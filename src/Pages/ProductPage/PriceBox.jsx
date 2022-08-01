@@ -44,9 +44,9 @@ const calcPercent = (num1, num2) => {
   return (100 - num1 / num2 * 100).toFixed(0)
 }
 
-function TransitionLeft(props) {
+function TransitionRight(props) {
   return (
-    <Slide {...props} direction="left">
+    <Slide {...props} direction="right">
       <Alert
         severity="success"
         elevation={6} variant="filled"
@@ -91,24 +91,6 @@ const PriceBox = ({ smallImages, price, setRefreshNavbar }) => {
   }, [id])
 
   const addToCart = async () => {
-    // if (!common_variable.signedIn) {
-    //   navigate('/signin', { state: { prev: window.location.pathname } })
-    //   return
-    // }
-
-    // let response = await axiosPost(`${BASE_API}/cartitems`, {
-    //   book_id: buyOptions[buyOptionIndex].book_id,
-    //   otype: buyOptions[buyOptionIndex].otype,
-    //   price: buyOptions[buyOptionIndex].price,
-    //   quantity: amount
-    // }, true)
-    // console.log('add to cart', response)
-    // navigate('/confirm', {
-    //   state: {
-    //     prev: 'product-page',
-    //     src: smallImages[0],
-    //   }
-    // })
     let cart = JSON.parse(localStorage.getItem('cart'))
     let sameIndex = cart.findIndex(book => book.book === id)
     if (sameIndex !== -1) cart[sameIndex].qualityBook += amount
@@ -117,7 +99,7 @@ const PriceBox = ({ smallImages, price, setRefreshNavbar }) => {
       qualityBook: amount
     })
     localStorage.setItem('cart', JSON.stringify(cart))
-    // axiosPost(`${HEROKU_API}/cart`, cart, true)
+    await axiosPost(`${HEROKU_API}/cart`, cart, true)
     console.log('cart', cart)
     setOpenAlert(true)
     setRefreshNavbar(prev => !prev)
@@ -198,8 +180,8 @@ const PriceBox = ({ smallImages, price, setRefreshNavbar }) => {
         open={openAlert}
         autoHideDuration={5000}
         onClose={() => { setOpenAlert(false) }}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        TransitionComponent={TransitionLeft}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        TransitionComponent={TransitionRight}
       >
 
       </Snackbar>
