@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core"
+import { Box, makeStyles } from "@material-ui/core"
 import { Navigate, Route, Routes } from "react-router-dom"
 import BookPage from "./Pages/BookPage/BookPage"
 import CartPage from "./Pages/CartPage/CartPage"
@@ -24,6 +24,10 @@ import UpdateBookPage from "./Pages/AdminPage/UpdateBookPage/UpdateBookPage"
 import OrderPage from "./Pages/AdminPage/OrderPage.jsx/OrderPage"
 import { Typography } from "@material-ui/core"
 import BillPage from "./Pages/BillPage/BillPage"
+import Footer from "./Layouts/Footer/Footer"
+import DieuKhoan from './Layouts/Footer/DieuKhoan'
+import ChinhSachBaoMat from './Layouts/Footer/ChinhSachBaoMat'
+import GioiThieu from './Layouts/Footer/GioiThieu'
 
 const useStyles = makeStyles((theme) => ({
   app: {
@@ -34,7 +38,8 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
     position: 'relative',
     backgroundColor: theme.palette.grey[100],
-    // paddingBottom: theme.spacing(4)
+    display: 'flex',
+    flexDirection: 'column'
   },
 }))
 
@@ -114,8 +119,15 @@ const App = () => {
 
             <Route path="/bill" element={<Navigate to='/bill/unprocessed' />} />
             <Route path="/bill/:status" element={<BillPage userInfo={userInfo} />} />
+            <Route path="/gioi-thieu" element={<GioiThieu />} />
+            <Route path="/chinh-sach-bao-mat" element={<ChinhSachBaoMat />} />
+            <Route path="/dieu-khoan" element={<DieuKhoan />} />
 
           </Routes>
+
+          <Box flexGrow={1} display='flex' alignItems='end'>
+            <Footer />
+          </Box>
         </div>
       }
     </>

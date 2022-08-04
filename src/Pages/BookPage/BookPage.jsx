@@ -112,6 +112,8 @@ const BookPage = () => {
 
       {!error && loading && <Loading />}
       {error && <Typography variant='h5' color='secondary'>Lỗi khi tải trang :(</Typography>}
+
+      <Box marginTop={4}/>
     </div>
   )
 

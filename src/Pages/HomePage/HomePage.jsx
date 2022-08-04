@@ -38,11 +38,11 @@ const HomePage = () => {
       const response = await axiosGet(`${HEROKU_API}/books`)
       if (!response) {
         setError(true)
-        return 
+        return
       }
       const books = response.data
       console.log('heroku book', books)
-      
+
       let lineResult = []
       const categories = await getCategoriesV2()
       if (!categories) {
@@ -80,7 +80,7 @@ const HomePage = () => {
   return (
     <div className={classes.root}>
       <Banner
-        img_url={'https://res.cloudinary.com/ha-noi-science-and-techlonogy-university/image/upload/v1654856935/banner_sach1_p84do2.webp'}
+        img_url={'https://res.cloudinary.com/ha-noi-science-and-techlonogy-university/image/upload/v1659368560/book_chill_store3_mrb0qw.png?fbclid=IwAR1yONGA_ma3I0CvY1O70WZJe7nSmZ2jIQ6tK_mhiuFJ3blNbsRWGPd4tck'}
       />
       {lineData.map((row, index) => {
         return (
@@ -96,9 +96,14 @@ const HomePage = () => {
         )
       })}
 
-      {!error && loading && <Loading/>}
+      {!error && loading && <Loading />}
+      {error &&
+        <>
+          <Box marginTop={4} />
+          <Typography variant='h5' color='secondary'>Lỗi khi tải trang :(</Typography>
+        </>
+      }
       <Box marginTop={4}/>
-      {error && <Typography variant='h5' color='secondary'>Lỗi khi tải trang :(</Typography>}
     </div>
   )
 
