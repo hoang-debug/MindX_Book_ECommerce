@@ -86,20 +86,6 @@ const BookPage = () => {
 
   return (
     <div className={classes.root}>
-
-      {/* {lineData.map((row, index) => {
-        return (
-          <Fragment key={index}>
-            <Box marginTop={2} />
-            <ItemSlider
-              key={index}
-              items={row.items}
-              label={row.label}
-              link={row.link}
-            />
-          </Fragment>
-        )
-      })} */}
       <Banner
         img_url={'https://res.cloudinary.com/ha-noi-science-and-techlonogy-university/image/upload/v1654856935/banner_sach1_p84do2.webp'}
       />

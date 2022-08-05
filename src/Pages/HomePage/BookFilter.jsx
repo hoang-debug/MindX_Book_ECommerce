@@ -126,7 +126,7 @@ const BookFilter = ({baseQuery}) => {
           <Button
             variant='contained'
             color='primary'
-            style={{ width: '150px' }}
+            style={{ width: '150px', backgroundColor: '#f28f40' }}
             size='small'
             onClick={filter}
           >

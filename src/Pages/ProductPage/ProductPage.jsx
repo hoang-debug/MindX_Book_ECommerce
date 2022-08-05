@@ -49,7 +49,7 @@ const ProductPage = (props) => {
   const [allowComment, setAllowComment] = useState(true)
   const [firstLoad, setFirstLoad] = useState(false)
   let { id } = useParams()
-  const getComments = async () => {
+  const getComments = async (id) => {
     let response = await axiosGet(`${HEROKU_API}/books/${id}/comments`)
     if (!response || !response.success) return
     const comments = response.data
@@ -61,6 +61,7 @@ const ProductPage = (props) => {
       return comment.createdBy.username === props.userInfo.username
     })
     if (index !== -1) setAllowComment(false)
+    else setAllowComment(true)
   }
   const getSameBook = async (cate) => {
     let response = await axiosGet(`${HEROKU_API}/books?category=${cate}`)
@@ -100,7 +101,7 @@ const ProductPage = (props) => {
     console.log('book data:', data)
 
     const sameBooks = await getSameBook(data.category)
-    getComments()
+    await getComments(id)
     let filtered_books = sameBooks.filter(book => book._id !== data._id)
     let lineRow = new LineRow('Sách cùng thể loại', `/book-page/${data.category}`)
     filtered_books.map(book => {
@@ -172,7 +173,7 @@ const ProductPage = (props) => {
                 // list_price={details.list_price}
                 // price={details.price}
                 quantity_sold={details.quantity_sold}
-                rating={details.rating}
+                rating={details.rating.toFixed(1)}
                 review_count={details.review_count}
                 title={details.title}
                 specs={details.specs}
@@ -217,7 +218,7 @@ const ProductPage = (props) => {
               paddingBottom={4}
             >
 
-              <CustomerRatings stars={details.rating} votes={numberWithCommas(details.review_count)} getBookDetails={() => getBookDetails(id)} allowComment={allowComment} />
+              <CustomerRatings stars={details.rating.toFixed(1)} votes={numberWithCommas(details.review_count)} getBookDetails={() => getBookDetails(id)} allowComment={allowComment} />
 
               <Divider flexItem orientation="vertical" />
               <Box

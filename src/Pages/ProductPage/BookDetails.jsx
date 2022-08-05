@@ -158,7 +158,7 @@ const BookDetails = ({ authors, desc, quantity_sold, rating, review_count, title
 
       <Box
         height='fit-content'
-        width='100%'
+        width='90%'
         position='relative'
         paddingX={3}
       >

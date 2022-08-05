@@ -104,7 +104,7 @@ const SearchResult = () => {
       {(!loading && gridData.length === 0) ?
         <>
           <Box marginTop={2} />
-          <Typography Typography gutterBottom variant="h5">Không có kết quả nào :(</Typography>
+          <Typography Typography gutterBottom variant="h5" style={{fontWeight: 600}}>Không có kết quả nào :(</Typography>
         </>
         :
         <BookListGrid

@@ -114,7 +114,7 @@ const HomePage = () => {
       {!lineData.length &&
         <>
           <Box marginTop={4}/>
-          <Typography variant='h5'>Không có sách nào :(</Typography>
+          <Typography variant='h5' style={{fontWeight: 500}}>Không có sách nào :(</Typography>
         </>
       }
 

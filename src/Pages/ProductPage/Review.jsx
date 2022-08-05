@@ -37,26 +37,13 @@ const Review = (props) => {
           {/* <Typography component='div' style={{ fontWeight: 600 }}>{props.summary}</Typography> */}
         </Box>
 
-        {/* <Typography variant="body2" style={{ color: '#575959' }}>Đánh giá ở&nbsp;
-        <Typography display="inline" variant="inherit">{props.place}</Typography>
-        ,&nbsp;
-        <Typography display="inline" variant="inherit">{props.date}</Typography>
-      </Typography> */}
-        {/* {props.verified && (
-        <Box marginY={1} display='flex'>
-          <Typography style={{ fontWeight: 500, color: '#ffa500' }} variant='body2'>Xác thực đã mua hàng</Typography>
-          &nbsp;
-          <Check fontSize="small" style={{ color: 'orange' }}/>
-        </Box>
-      )} */}
         <Box marginTop={1} />
-        <Typography variant='body1'>{props.details}</Typography>
-        {/* <Typography variant="body1" style={{ color: '#575959' }}>{props.votes}&nbsp;người đồng ý</Typography> */}
-        {/* <Box display='flex' marginTop={1.5}>
-        <Button variant="outlined" size='small' style={{paddingLeft: 30, paddingRight: 30}}> Đồng ý </Button>
-        <Divider orientation="vertical" flexItem variant="middle"/>
-        <Button style={{ color: '#575959' }} size='small'>Báo cáo lạm dụng</Button>
-      </Box> */}
+        <Typography 
+          variant='body1'
+          component='div'
+          style={{width: 'calc(100% - 20px)'}}
+        >{props.details}</Typography>
+
       </Box>
     </Paper>
   )
