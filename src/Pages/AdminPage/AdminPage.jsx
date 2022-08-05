@@ -16,7 +16,7 @@ const AdminPage = ({userInfo}) => {
       width='100%'
       minHeight='100vh'
       height='fit-content'
-      style={{ backgroundColor: '#f1f1f1' }}
+      style={{ backgroundColor: '#F4F3EC' }}
       display='flex'
       position='relative'
       paddingBottom={2}

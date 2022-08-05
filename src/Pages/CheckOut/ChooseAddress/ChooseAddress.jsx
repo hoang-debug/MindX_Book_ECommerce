@@ -13,7 +13,7 @@ import { common_variable } from "../../common";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: theme.palette.grey[100]
+    backgroundColor: '#F4F3EC'
   },
   submitButton: {
     width: '300px',

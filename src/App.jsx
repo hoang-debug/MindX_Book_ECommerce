@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 0,
     margin: 0,
     position: 'relative',
-    backgroundColor: theme.palette.grey[100],
+    backgroundColor: '#F4F3EC',
     display: 'flex',
     flexDirection: 'column'
   },
@@ -96,6 +96,7 @@ const App = () => {
         <div className={classes.app}>
           <Navbar signedIn={signedIn} refresh={refreshNavbar} userInfo={userInfo} />
           <Routes>
+            <Route path='/home' element={<Navigate to='/'/>}/>
             <Route path='/' element={<HomePage />} />
             <Route path="/book-page/:idCategory" element={<BookPage />} />
             <Route path="/cart" element={<CartPage setRefreshNavbar={setRefreshNavbar} />} />

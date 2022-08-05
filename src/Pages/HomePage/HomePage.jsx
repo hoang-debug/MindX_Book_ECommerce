@@ -6,13 +6,15 @@ import { axiosGet } from "../../Services/Ultils/axiosUtils";
 import { HEROKU_API } from "../../Services/Constants";
 import { LineItem, LineRow } from "../BookPage/useBookSearch";
 import Banner from "../BookPage/Banner";
+import BookFilter from "./BookFilter";
+import { useSearchParams } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
     paddingTop: theme.spacing(8),
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#F4F3EC',
     width: '100%',
     alignItems: 'center'
   }
@@ -23,6 +25,9 @@ const HomePage = () => {
   const [lineData, setLineData] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
+
+  const [searchParams, setSearchParams] = useSearchParams()
+
   useEffect(() => {
     setLoading(true)
     const getCategoriesV2 = async () => {
@@ -35,7 +40,12 @@ const HomePage = () => {
       return cv2
     }
     const getBooks = async () => {
-      const response = await axiosGet(`${HEROKU_API}/books`)
+      let price = searchParams.get('price')
+      let category = searchParams.get('category')
+      const response = await axiosGet(`${HEROKU_API}/books`, {
+        price,
+        category
+      })
       if (!response) {
         setError(true)
         return
@@ -75,13 +85,18 @@ const HomePage = () => {
     }
 
     getBooks()
-  }, [])
+  }, [searchParams])
 
   return (
     <div className={classes.root}>
       <Banner
         img_url={'https://res.cloudinary.com/ha-noi-science-and-techlonogy-university/image/upload/v1659368560/book_chill_store3_mrb0qw.png?fbclid=IwAR1yONGA_ma3I0CvY1O70WZJe7nSmZ2jIQ6tK_mhiuFJ3blNbsRWGPd4tck'}
       />
+
+      <Box marginTop={2} />
+
+      <BookFilter />
+
       {lineData.map((row, index) => {
         return (
           <Fragment key={index}>
@@ -96,6 +111,13 @@ const HomePage = () => {
         )
       })}
 
+      {!lineData.length &&
+        <>
+          <Box marginTop={4}/>
+          <Typography variant='h5'>Không có sách nào :(</Typography>
+        </>
+      }
+
       {!error && loading && <Loading />}
       {error &&
         <>
@@ -103,7 +125,7 @@ const HomePage = () => {
           <Typography variant='h5' color='secondary'>Lỗi khi tải trang :(</Typography>
         </>
       }
-      <Box marginTop={4}/>
+      <Box marginTop={4} />
     </div>
   )
 

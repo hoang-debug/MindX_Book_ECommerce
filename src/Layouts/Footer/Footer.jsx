@@ -1,11 +1,14 @@
 import { Box, Button, Divider, makeStyles, styled, Typography } from "@material-ui/core"
 import { Email, PhoneEnabled } from "@material-ui/icons"
-import { Link } from "react-router-dom"
+import { useEffect } from "react"
+import { Link, useLocation } from "react-router-dom"
 import { CustomButton } from "../../Pages/CustomComponent/CustomButton"
 import { OrangeButton } from "../../Pages/CustomComponent/OrangeButton"
 import { WhiteButton } from "../../Pages/CustomComponent/WhiteButton"
 
 const Footer = () => {
+
+
   return (
     <>
       <Box
@@ -19,6 +22,7 @@ const Footer = () => {
         flexDirection='column'
         alignItems='center'
         justifySelf='start'
+        zIndex={1002}
       >
         <Box width='90%' maxWidth='1500px'>
           <Box

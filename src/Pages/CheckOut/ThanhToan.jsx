@@ -7,7 +7,7 @@ import ThanhToanStepper from "./ThanhToanStepper";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: theme.palette.grey[100]
+    backgroundColor: '#F4F3EC'
   },
 }))
 

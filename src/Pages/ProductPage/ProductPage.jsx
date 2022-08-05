@@ -186,6 +186,8 @@ const ProductPage = (props) => {
                 price={details.price}
                 smallImages={details.images}
                 setRefreshNavbar={props.setRefreshNavbar}
+                maxAmount={data.amount}
+                userInfo={props.userInfo}
               />
 
             </Box>

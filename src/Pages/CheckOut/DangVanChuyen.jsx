@@ -7,7 +7,7 @@ import { CustomButton } from "../CustomComponent/CustomButton";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: theme.palette.grey[100]
+    backgroundColor: '#F4F3EC'
   },
   submitButton: {
     width: '200px',

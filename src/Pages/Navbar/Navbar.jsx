@@ -1,5 +1,5 @@
-import { AppBar, Avatar, Badge, Box, Button, IconButton, InputBase, makeStyles, Menu, MenuItem, Slide, TextField, Toolbar, Typography, useScrollTrigger, useTheme } from "@material-ui/core"
-import { ArrowBack, Clear, ExpandMore, Search, ShoppingBasket, ShoppingBasketOutlined } from "@material-ui/icons"
+import { AppBar, Avatar, Badge, Box, Button, IconButton, InputBase, ListItemIcon, ListItemText, makeStyles, Menu, MenuItem, Slide, TextField, Toolbar, Typography, useScrollTrigger, useTheme } from "@material-ui/core"
+import { ArrowBack, Clear, ExitToApp, ExpandMore, Receipt, Search, ShoppingBasket, ShoppingBasketOutlined, SupervisorAccount } from "@material-ui/icons"
 import React, { useEffect, useState } from "react"
 import LogoIcon from "../images/logo.png"
 import MenuSach from "./Navbar_Menu/MenuSach"
@@ -310,7 +310,7 @@ const Navbar = (props) => {
                 </NavLink>
               </Box>
 
-              <Box className={classes.tabBox}>
+              <Box className={classes.tabBox} >
                 {props.signedIn ? (
                   <>
                     <Avatar src={props.avatar_url} onClick={openAvaMenu} />
@@ -319,22 +319,57 @@ const Navbar = (props) => {
                       open={!!avaMenu}
                       onClose={closeAvaMenu}
                       onMouseLeave={() => { closeAvaMenu() }}
+                      // elevation={0}
+                      getContentAnchorEl={null}
+                      anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                      }}
+                      transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center',
+                      }}
+                      anchorPosition={{
+                        top: '100px'
+                      }}
+                      PaperProps={{
+                        style: {
+                          left: '50%',
+                          transform: 'translateY(13px)',
+                        },
+                      }}
+
                     >
                       {!!props.userInfo && props.userInfo.isAdmin &&
                         <Link to='/admin'>
-                          <MenuItem>
-                            <span style={{ color: 'purple' }}>ADMIN</span>
+                          <MenuItem onClick={()=>closeAvaMenu()}>
+                            <ListItemIcon>
+                              <SupervisorAccount style={{ color: 'purple' }} />
+                            </ListItemIcon>
+                            <ListItemText>
+                              <span style={{ color: 'purple' }}>ADMIN</span>
+                            </ListItemText>
                           </MenuItem>
                         </Link>
                       }
 
                       <Link to='/bill'>
-                        <MenuItem>
-                          <span >Đơn mua</span>
+                        <MenuItem onClick={()=>closeAvaMenu()}>
+                          <ListItemIcon>
+                            <Receipt />
+                          </ListItemIcon>
+                          <ListItemText>
+                            <span >Đơn mua</span>
+                          </ListItemText>
                         </MenuItem>
                       </Link>
-                      <MenuItem onClick={logout}>
-                        <span style={{ color: 'red' }}>Đăng xuất</span>
+                      <MenuItem onClick={()=>{logout();closeAvaMenu()} }>
+                        <ListItemIcon>
+                          <ExitToApp style={{ color: 'red' }} />
+                        </ListItemIcon>
+                        <ListItemText>
+                          <span style={{ color: 'red' }}>Đăng xuất</span>
+                        </ListItemText>
                       </MenuItem>
 
                     </Menu>

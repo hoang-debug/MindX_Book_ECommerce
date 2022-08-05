@@ -45,7 +45,7 @@ function TransitionRight(props) {
   )
 }
 
-const PriceBox = ({ smallImages, price, setRefreshNavbar }) => {
+const PriceBox = ({ smallImages, price, setRefreshNavbar, maxAmount, userInfo }) => {
   const classes = useStyles()
   const [amount, setAmount] = useState(1)
   const [buyable, setBuyable] = useState(false)
@@ -61,7 +61,7 @@ const PriceBox = ({ smallImages, price, setRefreshNavbar }) => {
   }, [buy_amount])
 
   useEffect(() => {
-    let buyable = isNumber(amount) && amount > 0 && parseFloat(amount) === parseInt(amount)
+    let buyable = isNumber(amount) && amount > 0 && parseFloat(amount) === parseInt(amount) && amount <= maxAmount
     setBuyable(buyable)
   }, [amount])
 
@@ -75,8 +75,16 @@ const PriceBox = ({ smallImages, price, setRefreshNavbar }) => {
   useEffect(() => {
     setAmount(1)
   }, [id])
-
+  const navigate = useNavigate()
   const addToCart = async () => {
+
+    if (!userInfo) {
+      // console.log(window.location.pathname)
+      localStorage.setItem('prevpage', window.location.pathname)
+      navigate('/signin')
+      return
+    } 
+
     let cart = JSON.parse(localStorage.getItem('cart'))
     let sameIndex = cart.findIndex(book => book.book === id)
     if (sameIndex !== -1) cart[sameIndex].qualityBook += amount
@@ -84,8 +92,10 @@ const PriceBox = ({ smallImages, price, setRefreshNavbar }) => {
       book: id,
       qualityBook: amount
     })
+    let response = await axiosPost(`${HEROKU_API}/cart`, cart, true)
+    if (!response || !response.success) return
     localStorage.setItem('cart', JSON.stringify(cart))
-    await axiosPost(`${HEROKU_API}/cart`, cart, true)
+    
     console.log('cart', cart)
     setOpenAlert(true)
     setRefreshNavbar(prev => !prev)
@@ -136,13 +146,16 @@ const PriceBox = ({ smallImages, price, setRefreshNavbar }) => {
 
 
       <Box marginTop={1}></Box>
-      {/* <Typography
-        style={{ color: (buyOptions[buyOptionIndex].quantity > 0) ? 'green' : 'red', fontWeight: '500' }} variant="h6">{(buyOptions[buyOptionIndex].quantity > 0) ? 'Còn hàng' : 'Hết hàng'}</Typography> */}
+      <Typography
+        style={{ color: (maxAmount > 0) ? 'green' : 'red', fontWeight: '500' }} 
+        variant="h6"
+      >{(maxAmount > 0) ? `Còn ${maxAmount} sản phẩm` : 'Hết hàng'}</Typography>
 
       <Box
         display='flex'
         alignItems='center'
       >
+
         <Typography variant='body2'>Số lượng:</Typography>
         <IconButton onClick={handleClickAmount(true)}><AddBox></AddBox></IconButton>
 

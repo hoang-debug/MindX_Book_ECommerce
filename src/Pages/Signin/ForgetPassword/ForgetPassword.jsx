@@ -31,6 +31,9 @@ const ForgetPassword = () => {
         {step === '2' && <PasswordStep2 />}
       </Box>
 
+      <Box marginTop={10}/>
+
+
     </Box>
   )
 }

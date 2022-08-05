@@ -28,7 +28,7 @@ const Signin = ({ _setUserInfo }) => {
         <Divider flexItem orientation="vertical"/>
         <RegisterBox/>
       </Box>
-
+      <Box marginTop={10}/>
     </Box>
   )
 }
