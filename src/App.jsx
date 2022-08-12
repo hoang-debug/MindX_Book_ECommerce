@@ -28,6 +28,7 @@ import Footer from "./Layouts/Footer/Footer"
 import DieuKhoan from './Layouts/Footer/DieuKhoan'
 import ChinhSachBaoMat from './Layouts/Footer/ChinhSachBaoMat'
 import GioiThieu from './Layouts/Footer/GioiThieu'
+import StatPage from "./Pages/AdminPage/StatPage/StatPage"
 
 const useStyles = makeStyles((theme) => ({
   app: {
@@ -68,6 +69,7 @@ const App = () => {
     console.log('data', info)
     setSignedIn(true)
     setUserInfo(info)
+    console.log('user info', userInfo)
     localStorage.setItem('access_token', info.token)
     let response = await axiosGet(`${HEROKU_API}/cart`, null, true)
     let cart = []
@@ -96,7 +98,7 @@ const App = () => {
         <div className={classes.app}>
           <Navbar signedIn={signedIn} refresh={refreshNavbar} userInfo={userInfo} />
           <Routes>
-            <Route path='/home' element={<Navigate to='/'/>}/>
+            <Route path='/home' element={<Navigate to='/' />} />
             <Route path='/' element={<HomePage />} />
             <Route path="/book-page/:idCategory" element={<BookPage />} />
             <Route path="/cart" element={<CartPage setRefreshNavbar={setRefreshNavbar} />} />
@@ -116,6 +118,7 @@ const App = () => {
               <Route path="update-book" element={<UpdateBookPage />} />
               <Route path="order-page/:status" element={<OrderPage />} />
               <Route path="order-page" element={<Navigate to='unprocessed' />} />
+              <Route path="stat-page" element={<StatPage />} />
             </Route>
 
             <Route path="/bill" element={<Navigate to='/bill/unprocessed' />} />

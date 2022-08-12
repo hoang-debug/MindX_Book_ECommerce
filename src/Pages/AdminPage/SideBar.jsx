@@ -76,6 +76,19 @@ const SideBar = () => {
           <Typography>Đơn hàng</Typography>
         </Box>
       </Link>
+      <Link to='stat-page'>
+        <Box
+          width='100%'
+          height='50px'
+          className={location.pathname.includes('stat-page') ? classes.activeTab : classes.inactiveTab}
+          display='flex'
+          alignItems='center'
+          paddingLeft={1}
+          boxSizing='border-box'
+        >
+          <Typography>Thống kê</Typography>
+        </Box>
+      </Link>
     </Box>
   )
 }

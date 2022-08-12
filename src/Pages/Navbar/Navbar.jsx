@@ -236,6 +236,8 @@ const Navbar = (props) => {
 
   const logout = () => {
     localStorage.setItem('access_token', '')
+    localStorage.setItem('cart', JSON.stringify([]))
+    localStorage.setItem('prev', '')
     window.location.reload()
   }
 
@@ -340,9 +342,10 @@ const Navbar = (props) => {
                       }}
 
                     >
+                      {console.log('nav', props.userInfo)}
                       {!!props.userInfo && props.userInfo.isAdmin &&
                         <Link to='/admin'>
-                          <MenuItem onClick={()=>closeAvaMenu()}>
+                          <MenuItem onClick={() => closeAvaMenu()}>
                             <ListItemIcon>
                               <SupervisorAccount style={{ color: 'purple' }} />
                             </ListItemIcon>
@@ -353,17 +356,19 @@ const Navbar = (props) => {
                         </Link>
                       }
 
-                      <Link to='/bill'>
-                        <MenuItem onClick={()=>closeAvaMenu()}>
-                          <ListItemIcon>
-                            <Receipt />
-                          </ListItemIcon>
-                          <ListItemText>
-                            <span >Đơn mua</span>
-                          </ListItemText>
-                        </MenuItem>
-                      </Link>
-                      <MenuItem onClick={()=>{logout();closeAvaMenu()} }>
+                      {!!props.userInfo && !props.userInfo.isAdmin &&
+                        <Link to='/bill'>
+                          <MenuItem onClick={() => closeAvaMenu()}>
+                            <ListItemIcon>
+                              <Receipt />
+                            </ListItemIcon>
+                            <ListItemText>
+                              <span >Đơn mua</span>
+                            </ListItemText>
+                          </MenuItem>
+                        </Link>
+                      }
+                      <MenuItem onClick={() => { logout(); closeAvaMenu() }}>
                         <ListItemIcon>
                           <ExitToApp style={{ color: 'red' }} />
                         </ListItemIcon>

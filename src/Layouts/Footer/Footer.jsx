@@ -1,13 +1,12 @@
 import { Box, Button, Divider, makeStyles, styled, Typography } from "@material-ui/core"
 import { Email, PhoneEnabled } from "@material-ui/icons"
 import { useEffect } from "react"
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { CustomButton } from "../../Pages/CustomComponent/CustomButton"
 import { OrangeButton } from "../../Pages/CustomComponent/OrangeButton"
 import { WhiteButton } from "../../Pages/CustomComponent/WhiteButton"
-
 const Footer = () => {
-
+  const navigate = useNavigate()
 
   return (
     <>
@@ -67,7 +66,7 @@ const Footer = () => {
               <TypoNormal>Hãy đăng nhập để thưởng thức một cách trọn vẹn tất cả tác phẩm của chúng tôi.</TypoNormal>
               <Box marginTop={2} />
 
-              <FooterButton>Đăng nhập / Đăng ký</FooterButton>
+              <FooterButton onClick={()=>navigate('/signin')}>Đăng nhập / Đăng ký</FooterButton>
             </Box>
           </Box>
           <Box marginTop={6} />

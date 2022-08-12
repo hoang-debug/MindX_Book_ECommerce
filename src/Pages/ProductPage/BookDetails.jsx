@@ -78,7 +78,7 @@ const responsive = {
 
 const BookDetails = ({ authors, desc, quantity_sold, rating, review_count, title, specs}) => {
   const classes = useStyles()
-
+  
   return (
     <Box
       name="book-details"
