@@ -2,7 +2,7 @@ import { Box, Button, Slide, Snackbar, TextField, Typography } from "@material-u
 import { Alert } from "@material-ui/lab"
 import { useEffect } from "react"
 import { useState } from "react"
-import { Line } from "react-chartjs-2"
+import { Bar, Line } from "react-chartjs-2"
 import { HEROKU_API } from "../../../Services/Constants"
 import { axiosGet } from "../../../Services/Ultils/axiosUtils"
 import { numberWithCommas } from "../../../Services/Ultils/NumberUtils"
@@ -17,6 +17,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  BarElement
 } from 'chart.js';
 
 ChartJS.register(
@@ -24,6 +25,7 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend
@@ -46,13 +48,14 @@ const StatPage = () => {
   const [openAlert, setOpenAlert] = useState(false)
   const [report, setReport] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [chartData, setChartData] = useState(null)
-
+  const [revenueData, setRevenueData] = useState(null)
+  const [buyerData, setBuyerData] = useState(null)
   useEffect(() => {
-    const getChartData = async () => {
+    const getGraph = async () => {
       let response = await axiosGet(`${HEROKU_API}/bill/graph`, null, true)
+      console.log(response)
       const data = response.data.reverse()
-      setChartData({
+      setRevenueData({
         labels: data.map(month => month.date),
         datasets: [
           {
@@ -63,8 +66,18 @@ const StatPage = () => {
           }
         ]
       })
+      setBuyerData({
+        labels: data.map(month=>month.date),
+        datasets: [
+          {
+            label: 'Số khách hàng',
+            data: data.map(month=>month.numberOfBuyer),
+            backgroundColor: 'rgba(53, 162, 235, 0.5)'
+          }
+        ]
+      })
     }
-    getChartData()
+    getGraph()
   }, [])
 
   const getReport = async (startTime, endTime) => {
@@ -159,10 +172,17 @@ const StatPage = () => {
           <StatBox name='Doanh thu' value={`${numberWithCommas(report?.totalRevenue)}đ`} color={3} />
         </Box>
 
-        {chartData &&
+        {revenueData &&
           <Box width='100%' height='fit-content' display='flex' justifyContent='center' marginY={4} boxSizing='border-box' paddingX={3}>
             <Box width='100%'>
-              <Line options={options} data={chartData} />
+              <Bar options={options} data={revenueData} />
+            </Box>
+          </Box>
+        }
+        {buyerData &&
+          <Box width='100%' height='fit-content' display='flex' justifyContent='center' marginY={4} boxSizing='border-box' paddingX={3}>
+            <Box width='100%'>
+              <Line options={options} data={buyerData} />
             </Box>
           </Box>
         }

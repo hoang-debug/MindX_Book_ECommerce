@@ -12,14 +12,16 @@ const RegisterBox = () => {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [password2, setPassword2] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
   const login = async (e) => {
     e.preventDefault()
     let response = await axiosPost(`${HEROKU_API}/auth/register`, {
-      username: username,
-      email: email,
-      password: password
+      username,
+      email,
+      password,
+      password2
     })
     if (!response.success) setError(response.message)
     else {
@@ -43,7 +45,7 @@ const RegisterBox = () => {
       <Box
         boxSizing='border-box'
         width='420px'
-        height='450px'
+        height='fit-content'
         style={{ backgroundColor: 'white' }}
         borderRadius='5px'
         padding={4}
@@ -96,7 +98,7 @@ const RegisterBox = () => {
               padding={2}
               boxSizing='border-box'
             >
-              <CheckCircleOutline style={{ fontSize: '20px',color: 'green' }}/>
+              <CheckCircleOutline style={{ fontSize: '20px', color: 'green' }} />
               <Box marginLeft={2} />
               <Typography variant='body2'>
                 Đăng ký thành công
@@ -104,7 +106,8 @@ const RegisterBox = () => {
             </Box>
 
             <Box marginTop={2} />
-          </>}
+          </>
+        }
 
         <TextField
           label="Username"
@@ -133,9 +136,17 @@ const RegisterBox = () => {
           required
           type='password'
         />
-
         <Box marginTop={2} />
-
+        <TextField
+          label="Nhập lại Password"
+          variant="outlined"
+          value={password2}
+          onChange={(e) => { setPassword2(e.target.value) }}
+          fullWidth
+          required
+          type='password'
+        />
+        <Box marginTop={2} />
 
         <OrangeButton
           fullWidth

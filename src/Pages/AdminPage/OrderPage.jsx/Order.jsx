@@ -2,7 +2,7 @@ import { Box, Button, Divider, IconButton, MenuItem, TextField, Typography } fro
 import { FileCopyOutlined } from "@material-ui/icons"
 import { Fragment, useEffect } from "react"
 import { useState } from "react"
-import { BUY_STATUS, HEROKU_API } from "../../../Services/Constants"
+import { BUY_STATUS, BUY_STATUS_VN, HEROKU_API } from "../../../Services/Constants"
 import { axiosGet, axiosPut } from "../../../Services/Ultils/axiosUtils"
 import { numberWithCommas } from "../../../Services/Ultils/NumberUtils"
 import OrderItem from "./OrderItem"
@@ -114,7 +114,7 @@ const Order = ({ _id, _status, _items, _totalBill, _address }) => {
                       key={status}
                       value={status}
                     >
-                      {status}
+                      {BUY_STATUS_VN[status]}
                     </MenuItem>
                   )}
                 </TextField>
