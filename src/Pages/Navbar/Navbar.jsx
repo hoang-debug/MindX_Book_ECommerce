@@ -272,7 +272,9 @@ const Navbar = (props) => {
                 className={classes.menuBox}
                 onClick={handleExpandClick('menu-sach')}
               >
-                <Typography variant="body2" component='div'>Thể loại</Typography>
+                <Typography variant="body1" 
+                style={{fontWeight: 'bold'}}
+                component='div'>Thể loại</Typography>
                 <ExpandMore
                   className={classes.expandIcon}
                   style={{ display: (anchor[0] === 'menu-sach') ? 'block' : 'none' }}

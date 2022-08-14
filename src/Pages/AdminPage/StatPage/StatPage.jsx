@@ -31,18 +31,33 @@ ChartJS.register(
   Legend
 );
 
-const options = {
+const optionsRevenue = {
   responsive: true,
-  // plugins: {
-  //   legend: {
-  //     position: 'top',
-  //   },
-  //   title: {
-  //     display: false,
-  //     text: 'Doanh thu',
-  //   },
-  // },
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      text: 'Thống kê doanh thu 6 tháng gần nhất',
+      position: 'bottom'
+    },
+  },
 };
+const optionsBuyer = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      text: 'Thống kê khách hàng đã mua hàng 6 tháng gần nhất',
+      position: 'bottom'
+    },
+  },
+};
+
 const StatPage = () => {
 
   const [openAlert, setOpenAlert] = useState(false)
@@ -175,14 +190,14 @@ const StatPage = () => {
         {revenueData &&
           <Box width='100%' height='fit-content' display='flex' justifyContent='center' marginY={4} boxSizing='border-box' paddingX={3}>
             <Box width='100%'>
-              <Bar options={options} data={revenueData} />
+              <Bar options={optionsRevenue} data={revenueData} />
             </Box>
           </Box>
         }
         {buyerData &&
           <Box width='100%' height='fit-content' display='flex' justifyContent='center' marginY={4} boxSizing='border-box' paddingX={3}>
             <Box width='100%'>
-              <Line options={options} data={buyerData} />
+              <Line options={optionsBuyer} data={buyerData} />
             </Box>
           </Box>
         }
