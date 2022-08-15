@@ -7,6 +7,7 @@ import { choices } from "../ProductPage/BookDetails";
 import { numberWithCommas } from "../../Services/Ultils/NumberUtils";
 import { axiosGet } from "../../Services/Ultils/axiosUtils";
 import { Link, useNavigate } from "react-router-dom";
+import { Skeleton } from "@material-ui/lab";
 
 const useStyles = makeStyles((theme) => ({
   img: {
@@ -30,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     cursor: 'pointer',
-    '&:hover' : {
+    '&:hover': {
       textDecoration: 'underline'
     }
   },
@@ -103,7 +104,7 @@ const CartItem = (props) => {
               <img
                 className={classes.img}
                 src={`${details.image}`}
-                onClick={()=>{goToProductPage()}}
+                onClick={() => { goToProductPage() }}
               />
             </Box>
             <Box
@@ -112,7 +113,7 @@ const CartItem = (props) => {
               paddingX={2}
               boxSizing='border-box'
             >
-              <Typography variant='h6' component='div' noWrap onClick={()=>{goToProductPage()}} className={classes.title}>{details.title}</Typography>
+              <Typography variant='h6' component='div' noWrap onClick={() => { goToProductPage() }} className={classes.title}>{details.title}</Typography>
               <Typography variant='subtitle1' component='div'>{`by ${details.authors.join(', ')}`}</Typography>
               <Typography style={{ color: 'orange' }}>({numberWithCommas(details.price)}đ)</Typography>
               <Box
@@ -146,6 +147,29 @@ const CartItem = (props) => {
           </Box>
           <Divider />
         </>
+      }
+      {!!!details &&
+        <Box
+          display='flex'
+          padding={2}
+          boxSizing='border-box'
+          // justifyContent='space-between'
+          height={170}
+        >
+          <Box width='120px'>
+            <Skeleton variant="rect" width={'100%'} height={'100%'} />
+          </Box>
+          <Box
+            width='calc(100% - 200px)'
+            position='relative'
+            paddingX={2}
+            boxSizing='border-box'
+          >
+            <Skeleton variant="text" width={'300px'} />
+            <Skeleton variant="text" width={'200px'} />
+            <Skeleton variant="text" width={'180px'} />
+          </Box>
+        </Box>
       }
     </div>
 

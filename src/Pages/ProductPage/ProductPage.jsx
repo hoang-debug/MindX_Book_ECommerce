@@ -14,6 +14,7 @@ import { axiosGet } from '../../Services/Ultils/axiosUtils'
 import { BASE_API, HEROKU_API } from "../../Services/Constants";
 import { convertBlockToLineRow, LineItem, LineRow } from "../BookPage/useBookSearch";
 import { numberWithCommas } from "../../Services/Ultils/NumberUtils";
+import Loading from "../Loading";
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.common.white
@@ -48,6 +49,7 @@ const ProductPage = (props) => {
   const [comments, setComments] = useState([])
   const [allowComment, setAllowComment] = useState(true)
   const [firstLoad, setFirstLoad] = useState(false)
+  const [loading, setLoading] = useState(false)
   let { id } = useParams()
   const getComments = async (id) => {
     let response = await axiosGet(`${HEROKU_API}/books/${id}/comments`)
@@ -70,6 +72,7 @@ const ProductPage = (props) => {
     return response.data
   }
   const getBookDetails = async (id) => {
+    setLoading(true)
     console.log('book id:', id)
     let response = await axiosGet(`${HEROKU_API}/books/${id}`)
     console.log(response)
@@ -124,6 +127,7 @@ const ProductPage = (props) => {
     // setSimilarBuy(convertBlockToLineRow(response.data.similar_buy_block).getObject())
     // setSimilarView(convertBlockToLineRow(response.data.similar_view_block).getObject())
     setFirstLoad(true)
+    setLoading(false)
   }
   useEffect(() => {
     getBookDetails(id)
@@ -189,6 +193,7 @@ const ProductPage = (props) => {
                 setRefreshNavbar={props.setRefreshNavbar}
                 maxAmount={data.amount}
                 userInfo={props.userInfo}
+                setLoading={setLoading}
               />
 
             </Box>
@@ -218,7 +223,7 @@ const ProductPage = (props) => {
               paddingBottom={4}
             >
 
-              <CustomerRatings stars={details.rating.toFixed(1)} votes={numberWithCommas(details.review_count)} getBookDetails={() => getBookDetails(id)} allowComment={allowComment} />
+              <CustomerRatings stars={details.rating.toFixed(1)} votes={numberWithCommas(details.review_count)} getBookDetails={() => getBookDetails(id)} allowComment={allowComment} setLoading={setLoading}/>
 
               <Divider flexItem orientation="vertical" />
               <Box
@@ -256,6 +261,8 @@ const ProductPage = (props) => {
 
         </Box>
       }
+
+      {loading && <Loading />}
     </>
 
 

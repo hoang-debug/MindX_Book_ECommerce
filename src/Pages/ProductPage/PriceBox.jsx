@@ -45,7 +45,7 @@ function TransitionRight(props) {
   )
 }
 
-const PriceBox = ({ smallImages, price, setRefreshNavbar, maxAmount, userInfo }) => {
+const PriceBox = ({ smallImages, price, setRefreshNavbar, maxAmount, userInfo, setLoading }) => {
   const classes = useStyles()
   const [amount, setAmount] = useState(1)
   const [buyable, setBuyable] = useState(false)
@@ -92,10 +92,11 @@ const PriceBox = ({ smallImages, price, setRefreshNavbar, maxAmount, userInfo })
       book: id,
       qualityBook: amount
     })
+    setLoading(true)
     let response = await axiosPost(`${HEROKU_API}/cart`, cart, true)
     if (!response || !response.success) return
     localStorage.setItem('cart', JSON.stringify(cart))
-    
+    setLoading(false)
     console.log('cart', cart)
     setOpenAlert(true)
     setRefreshNavbar(prev => !prev)
