@@ -14,6 +14,7 @@ import { axiosGet } from '../../Services/Ultils/axiosUtils'
 import { BASE_API, HEROKU_API } from "../../Services/Constants";
 import { convertBlockToLineRow, LineItem, LineRow } from "../BookPage/useBookSearch";
 import { numberWithCommas } from "../../Services/Ultils/NumberUtils";
+import Loading from "../Loading";
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.common.white
@@ -48,8 +49,9 @@ const ProductPage = (props) => {
   const [comments, setComments] = useState([])
   const [allowComment, setAllowComment] = useState(true)
   const [firstLoad, setFirstLoad] = useState(false)
+  const [loading, setLoading] = useState(false)
   let { id } = useParams()
-  const getComments = async () => {
+  const getComments = async (id) => {
     let response = await axiosGet(`${HEROKU_API}/books/${id}/comments`)
     if (!response || !response.success) return
     const comments = response.data
@@ -61,6 +63,7 @@ const ProductPage = (props) => {
       return comment.createdBy.username === props.userInfo.username
     })
     if (index !== -1) setAllowComment(false)
+    else setAllowComment(true)
   }
   const getSameBook = async (cate) => {
     let response = await axiosGet(`${HEROKU_API}/books?category=${cate}`)
@@ -69,6 +72,7 @@ const ProductPage = (props) => {
     return response.data
   }
   const getBookDetails = async (id) => {
+    setLoading(true)
     console.log('book id:', id)
     let response = await axiosGet(`${HEROKU_API}/books/${id}`)
     console.log(response)
@@ -100,7 +104,7 @@ const ProductPage = (props) => {
     console.log('book data:', data)
 
     const sameBooks = await getSameBook(data.category)
-    getComments()
+    await getComments(id)
     let filtered_books = sameBooks.filter(book => book._id !== data._id)
     let lineRow = new LineRow('Sách cùng thể loại', `/book-page/${data.category}`)
     filtered_books.map(book => {
@@ -123,6 +127,7 @@ const ProductPage = (props) => {
     // setSimilarBuy(convertBlockToLineRow(response.data.similar_buy_block).getObject())
     // setSimilarView(convertBlockToLineRow(response.data.similar_view_block).getObject())
     setFirstLoad(true)
+    setLoading(false)
   }
   useEffect(() => {
     getBookDetails(id)
@@ -172,7 +177,7 @@ const ProductPage = (props) => {
                 // list_price={details.list_price}
                 // price={details.price}
                 quantity_sold={details.quantity_sold}
-                rating={details.rating}
+                rating={details.rating.toFixed(1)}
                 review_count={details.review_count}
                 title={details.title}
                 specs={details.specs}
@@ -186,6 +191,9 @@ const ProductPage = (props) => {
                 price={details.price}
                 smallImages={details.images}
                 setRefreshNavbar={props.setRefreshNavbar}
+                maxAmount={data.amount}
+                userInfo={props.userInfo}
+                setLoading={setLoading}
               />
 
             </Box>
@@ -215,7 +223,7 @@ const ProductPage = (props) => {
               paddingBottom={4}
             >
 
-              <CustomerRatings stars={details.rating} votes={numberWithCommas(details.review_count)} getBookDetails={() => getBookDetails(id)} allowComment={allowComment} />
+              <CustomerRatings stars={details.rating.toFixed(1)} votes={numberWithCommas(details.review_count)} getBookDetails={() => getBookDetails(id)} allowComment={allowComment} setLoading={setLoading}/>
 
               <Divider flexItem orientation="vertical" />
               <Box
@@ -253,6 +261,8 @@ const ProductPage = (props) => {
 
         </Box>
       }
+
+      {loading && <Loading />}
     </>
 
 

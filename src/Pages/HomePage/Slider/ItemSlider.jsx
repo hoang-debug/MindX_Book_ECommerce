@@ -70,6 +70,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative'
   },
   seeMore: {
+    color: '#f28f40',
     '&:hover': {
       color: '#C7511F',
     }
@@ -89,7 +90,7 @@ const ItemSlider = ({label, link, items, maxWidth = '1480px'}) => {
           <Typography
             variant="body2"
             color="primary"
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: 'pointer', fontWeight: '500' }}
             onClick={() => { navigate(link) }}
             className={classes.seeMore}
           >

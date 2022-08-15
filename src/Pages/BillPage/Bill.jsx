@@ -1,29 +1,35 @@
-import { Box, Button, Divider, IconButton, MenuItem, TextField, Typography } from "@material-ui/core"
+import { Box, Button, Divider, IconButton, MenuItem, TextField, Typography, Slide, Snackbar } from "@material-ui/core"
 import { FileCopyOutlined } from "@material-ui/icons"
 import { Fragment, useEffect } from "react"
 import { useState } from "react"
-import { BUY_STATUS, BUY_STATUS_VN, HEROKU_API } from "../../../Services/Constants"
-import { axiosGet, axiosPut } from "../../../Services/Ultils/axiosUtils"
-import { numberWithCommas } from "../../../Services/Ultils/NumberUtils"
-import OrderItem from "./OrderItem"
+import { BUY_STATUS, HEROKU_API } from "../../Services/Constants"
+import { axiosGet, axiosPut } from "../../Services/Ultils/axiosUtils"
+import { numberWithCommas } from "../../Services/Ultils/NumberUtils"
+import BillItem from "./BillItem"
 
-
-const Order = ({ _id, _status, _items, _totalBill, _address }) => {
+const Bill = ({ _id, _status, _items, _totalBill, _address, setOpenAlert, setAlertMessage, setAlertSevirity }) => {
 
   const [hidden, setHidden] = useState(false)
   const clickCopy = () => {
     navigator.clipboard.writeText(_id);
   }
-  const [status, setStatus] = useState(_status)
 
-  const confirm = async () => {
-    let response = await axiosPut(`${HEROKU_API}/bill/${_id}`, {
-      "status": status,
+  const cancelOrder = async () => {
+    let response = await axiosPut(`${HEROKU_API}/bill/canceledBill/${_id}`, {
+      "status": 'canceled',
     }, true)
     console.log(response)
-    if (!response || !response.success) return
+    setOpenAlert(true)
+    if (!response || !response.success) {
+      setAlertMessage('Không thể hủy đơn hàng')
+      setAlertSevirity('error')
+      return
+    }
     setHidden(true)
+    setAlertMessage('Hủy đơn hàng thành công')
+    setAlertSevirity('success')
   }
+
   return (
     <>
       {!hidden &&
@@ -54,7 +60,7 @@ const Order = ({ _id, _status, _items, _totalBill, _address }) => {
                 key={item._id}
               >
                 <Box marginTop={1} />
-                <OrderItem
+                <BillItem
                   _data={item.book}
                   _quantity={item.qualityBook}
                   _id={item._id}
@@ -95,39 +101,18 @@ const Order = ({ _id, _status, _items, _totalBill, _address }) => {
               </Typography>
 
               <Box marginTop={1} />
+
               <Box
                 display='flex'
                 justifyContent='flex-end'
                 alignItems='end'
                 paddingLeft={5}
               >
-                <TextField
-                  select
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value)}
-                  variant='outlined'
-                  size="small"
-                  style={{ width: '150px' }}
-                >
-                  {BUY_STATUS.map(status =>
-                    <MenuItem
-                      key={status}
-                      value={status}
-                    >
-                      {BUY_STATUS_VN[status]}
-                    </MenuItem>
-                  )}
-                </TextField>
-                <Box marginLeft={1} />
-                <Button
-                  variant='contained'
-                  color="primary"
-                  disabled={status === _status}
-                  style={{ height: '40px', width: '100px' }}
-                  onClick={confirm}
-                >
-                  Confirm
-                </Button>
+                {_status==='unprocessed' &&
+                  <Button variant='outlined' onClick={cancelOrder}>
+                    Hủy đơn
+                  </Button>
+                }
               </Box>
             </Box>
 
@@ -138,4 +123,4 @@ const Order = ({ _id, _status, _items, _totalBill, _address }) => {
   )
 }
 
-export default Order
+export default Bill

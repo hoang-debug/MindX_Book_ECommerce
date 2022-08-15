@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme)=>({
     display: 'flex',
     flexDirection: 'column',
     paddingTop: theme.spacing(8),
-    backgroundColor: theme.palette.grey[100],
+    backgroundColor: '#F4F3EC',
     width: '100%',
     height: '100%',
     position: 'relative'

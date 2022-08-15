@@ -6,7 +6,7 @@ import { HEROKU_API } from "../../Services/Constants"
 import { axiosPost } from "../../Services/Ultils/axiosUtils"
 import { OrangeButton } from "../CustomComponent/OrangeButton"
 
-const useStyles = makeStyles((theme)=>({
+const useStyles = makeStyles((theme) => ({
   forgetLabel: {
     color: 'black',
     cursor: 'pointer',
@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme)=>({
   }
 }))
 
-const LoginBox = ({_setUserInfo}) => {
+const LoginBox = ({ _setUserInfo }) => {
   const classes = useStyles()
   const navigate = useNavigate()
   const [username, setUsername] = useState('')
@@ -31,8 +31,10 @@ const LoginBox = ({_setUserInfo}) => {
     console.log(response)
     if (!response.success) setError(response.message)
     else {
-      _setUserInfo({...response.data, 'username': username})
-      navigate('/')
+      _setUserInfo({ ...response.data, 'username': username })
+      let prevpage = localStorage.getItem('prevpage')
+      if (prevpage) navigate(prevpage)
+      else navigate('/')
     }
   }
 
@@ -114,11 +116,11 @@ const LoginBox = ({_setUserInfo}) => {
 
         <Box marginTop={1} />
 
-        
+
         <Typography
           variant='caption'
           className={classes.forgetLabel}
-          onClick={()=>{navigate('/forget-password/1')}}
+          onClick={() => { navigate('/forget-password/1') }}
         >
           Quên mật khẩu
         </Typography>

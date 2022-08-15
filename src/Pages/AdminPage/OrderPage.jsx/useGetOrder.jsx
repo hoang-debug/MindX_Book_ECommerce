@@ -10,6 +10,10 @@ export default function useGetOrder(url, status, offset) {
   const [carts, setCarts] = useState([])
   const prevGetTime = useRef()
 
+  useEffect(()=>{
+    console.log(status, offset)
+  }, [status, offset])
+
   useEffect(() => {
     setCarts([])
     setError(false)

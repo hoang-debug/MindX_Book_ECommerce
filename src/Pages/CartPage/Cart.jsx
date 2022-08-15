@@ -9,6 +9,7 @@ import { numberWithCommas } from "../../Services/Ultils/NumberUtils";
 import CartItem from "./CartItem";
 import RecommendItem from "./RecommendItem";
 import { common_variable } from "../common";
+import Loading from "../Loading";
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -71,6 +72,7 @@ const Cart = (props) => {
 
   const [items, setItems] = useState([])
   const [subtotal, setSubtotal] = useState(0)
+  const [loading, setLoading] = useState(false)
   const getCartItems = async () => {
     let items = JSON.parse(localStorage.getItem('cart'))
     setItems(items)
@@ -95,20 +97,26 @@ const Cart = (props) => {
   }
 
   const deleteItem = (id) => async (event) => {
+    setLoading(true)
     let items = JSON.parse(localStorage.getItem('cart'))
     let index = items.findIndex(item => item.book === id)
     items.splice(index, 1)
     localStorage.setItem('cart', JSON.stringify(items))
+    await axiosPost(`${HEROKU_API}/cart`, items, true)
     setItems(items)
     props.setRefreshNavbar(prev => !prev)
+    setLoading(false)
   }
 
   const updateItem = async (id, amount) => {
+    setLoading(true)
     let items = JSON.parse(localStorage.getItem('cart'))
     let index = items.findIndex(item => item.book === id)
     items[index].qualityBook = amount
     localStorage.setItem('cart', JSON.stringify(items))
+    await axiosPost(`${HEROKU_API}/cart`, items, true)
     setItems(items)
+    setLoading(false)
   }
 
   useEffect(()=>{
@@ -118,8 +126,6 @@ const Cart = (props) => {
   const checkOut = () => {
     navigate('/chon-dia-chi', { state: { prev: PrevChooseAddress.CHECK_OUT } })
   }
-
- 
 
   return (
     <Box
@@ -205,6 +211,8 @@ const Cart = (props) => {
           </Box>
         </>
       }
+
+      {loading && <Loading/>}
     </Box>
   )
 }

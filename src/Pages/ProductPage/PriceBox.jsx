@@ -32,19 +32,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const smallimages = [
-  'https://images-na.ssl-images-amazon.com/images/I/81PiNiKPESL.jpg',
-  'https://images-na.ssl-images-amazon.com/images/I/61m1Vxw8tiL.jpg',
-  'https://images-na.ssl-images-amazon.com/images/I/71Pt7z-Dt6L.jpg',
-  'https://images-na.ssl-images-amazon.com/images/I/81a4PaoziAL.jpg'
-]
-
-const calcPercent = (num1, num2) => {
-  if (!num1 || !num2) return null
-  return (100 - num1 / num2 * 100).toFixed(0)
-}
-
-function TransitionLeft(props) {
+function TransitionRight(props) {
   return (
     <Slide {...props} direction="right">
       <Alert
@@ -57,9 +45,7 @@ function TransitionLeft(props) {
   )
 }
 
-
-
-const PriceBox = ({ smallImages, price, setRefreshNavbar }) => {
+const PriceBox = ({ smallImages, price, setRefreshNavbar, maxAmount, userInfo, setLoading }) => {
   const classes = useStyles()
   const [amount, setAmount] = useState(1)
   const [buyable, setBuyable] = useState(false)
@@ -75,7 +61,7 @@ const PriceBox = ({ smallImages, price, setRefreshNavbar }) => {
   }, [buy_amount])
 
   useEffect(() => {
-    let buyable = isNumber(amount) && amount > 0 && parseFloat(amount) === parseInt(amount)
+    let buyable = isNumber(amount) && amount > 0 && parseFloat(amount) === parseInt(amount) && amount <= maxAmount
     setBuyable(buyable)
   }, [amount])
 
@@ -89,26 +75,16 @@ const PriceBox = ({ smallImages, price, setRefreshNavbar }) => {
   useEffect(() => {
     setAmount(1)
   }, [id])
-
+  const navigate = useNavigate()
   const addToCart = async () => {
-    // if (!common_variable.signedIn) {
-    //   navigate('/signin', { state: { prev: window.location.pathname } })
-    //   return
-    // }
 
-    // let response = await axiosPost(`${BASE_API}/cartitems`, {
-    //   book_id: buyOptions[buyOptionIndex].book_id,
-    //   otype: buyOptions[buyOptionIndex].otype,
-    //   price: buyOptions[buyOptionIndex].price,
-    //   quantity: amount
-    // }, true)
-    // console.log('add to cart', response)
-    // navigate('/confirm', {
-    //   state: {
-    //     prev: 'product-page',
-    //     src: smallImages[0],
-    //   }
-    // })
+    if (!userInfo) {
+      // console.log(window.location.pathname)
+      localStorage.setItem('prevpage', window.location.pathname)
+      navigate('/signin')
+      return
+    } 
+
     let cart = JSON.parse(localStorage.getItem('cart'))
     let sameIndex = cart.findIndex(book => book.book === id)
     if (sameIndex !== -1) cart[sameIndex].qualityBook += amount
@@ -116,8 +92,11 @@ const PriceBox = ({ smallImages, price, setRefreshNavbar }) => {
       book: id,
       qualityBook: amount
     })
+    setLoading(true)
+    let response = await axiosPost(`${HEROKU_API}/cart`, cart, true)
+    if (!response || !response.success) return
     localStorage.setItem('cart', JSON.stringify(cart))
-    // axiosPost(`${HEROKU_API}/cart`, cart, true)
+    setLoading(false)
     console.log('cart', cart)
     setOpenAlert(true)
     setRefreshNavbar(prev => !prev)
@@ -168,13 +147,16 @@ const PriceBox = ({ smallImages, price, setRefreshNavbar }) => {
 
 
       <Box marginTop={1}></Box>
-      {/* <Typography
-        style={{ color: (buyOptions[buyOptionIndex].quantity > 0) ? 'green' : 'red', fontWeight: '500' }} variant="h6">{(buyOptions[buyOptionIndex].quantity > 0) ? 'Còn hàng' : 'Hết hàng'}</Typography> */}
+      <Typography
+        style={{ color: (maxAmount > 0) ? 'green' : 'red', fontWeight: '500' }} 
+        variant="h6"
+      >{(maxAmount > 0) ? `Còn ${maxAmount} sản phẩm` : 'Hết hàng'}</Typography>
 
       <Box
         display='flex'
         alignItems='center'
       >
+
         <Typography variant='body2'>Số lượng:</Typography>
         <IconButton onClick={handleClickAmount(true)}><AddBox></AddBox></IconButton>
 
@@ -199,7 +181,7 @@ const PriceBox = ({ smallImages, price, setRefreshNavbar }) => {
         autoHideDuration={5000}
         onClose={() => { setOpenAlert(false) }}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        TransitionComponent={TransitionLeft}
+        TransitionComponent={TransitionRight}
       >
 
       </Snackbar>

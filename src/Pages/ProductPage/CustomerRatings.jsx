@@ -25,6 +25,7 @@ const CustomerRatings = (props) => {
   }
 
   const postComment = async () => {
+    props.setLoading(true)
     let data = {
       "content": comment,
       "bookId": id,

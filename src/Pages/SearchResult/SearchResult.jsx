@@ -8,13 +8,14 @@ import { axiosGet } from "../../Services/Ultils/axiosUtils";
 import Banner from "../BookPage/Banner";
 import BookListGrid from "../BookPage/BookListGrid";
 import { GridItem } from "../BookPage/useBookSearch";
+import BookFilter from "../HomePage/BookFilter";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
     paddingTop: theme.spacing(8),
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#F4F3EC',
     width: '100%',
     alignItems: 'center'
   }
@@ -27,12 +28,20 @@ const SearchResult = () => {
   const [error, setError] = useState(false)
   const { keyword } = useParams()
   const [gridLabel, setGridLabel] = useState('')
+
+  const [searchParams, setSearchParams] = useSearchParams()
+
   useEffect(() => {
     if (!keyword) return
     setLoading(true)
-
+    setGridLabel(`Kết quả tìm kiếm cho từ khóa: ${keyword}`)
     const getBooks = async () => {
-      const response = await axiosGet(`${HEROKU_API}/books?keyword=${keyword}`)
+      let price = searchParams.get('price')
+      let category = searchParams.get('category')
+      const response = await axiosGet(`${HEROKU_API}/books?keyword=${keyword}`, {
+        price,
+        category
+      })
       if (!response) {
         setError(true)
         return
@@ -60,13 +69,13 @@ const SearchResult = () => {
         gridResult.push(gridItem.getObject())
       })
       // console.log('grid', gridResult)
-      setGridLabel(gridLabel)
+      // setGridLabel(gridLabel)
       setGridData(gridResult)
       setLoading(false)
     }
 
     getBooks()
-  }, [keyword])
+  }, [keyword, searchParams])
 
   return (
     <div className={classes.root}>
@@ -88,10 +97,14 @@ const SearchResult = () => {
         img_url={'https://res.cloudinary.com/ha-noi-science-and-techlonogy-university/image/upload/v1654856935/banner_sach1_p84do2.webp'}
       />
 
+      <Box marginTop={2} />
+
+      <BookFilter />
+
       {(!loading && gridData.length === 0) ?
         <>
           <Box marginTop={2} />
-          <Typography Typography gutterBottom variant="h5">Không có kết quả nào :(</Typography>
+          <Typography Typography gutterBottom variant="h5" style={{fontWeight: 600}}>Không có kết quả nào :(</Typography>
         </>
         :
         <BookListGrid
@@ -104,6 +117,7 @@ const SearchResult = () => {
 
       {!error && loading && <Loading />}
       {error && <Typography variant='h5' color='secondary'>Lỗi khi tải trang :(</Typography>}
+      <Box marginTop={4} />
     </div >
   )
 

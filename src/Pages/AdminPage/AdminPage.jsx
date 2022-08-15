@@ -1,15 +1,22 @@
 import { Box } from "@material-ui/core"
-import { Outlet, Route, Routes } from "react-router-dom"
+import { useEffect } from "react"
+import { Outlet, Route, Routes, useNavigate } from "react-router-dom"
 import AddBookPage from "./AddBookPage/AddBookPage"
 import SideBar from "./SideBar"
 
-const AdminPage = () => {
+const AdminPage = ({userInfo}) => {
+
+  const navigate = useNavigate()
+
+  useEffect(()=>{
+    if (!userInfo || !userInfo.isAdmin) navigate('/')
+  }, [userInfo])
   return (
     <Box
       width='100%'
       minHeight='100vh'
       height='fit-content'
-      style={{ backgroundColor: '#f1f1f1' }}
+      style={{ backgroundColor: '#F4F3EC' }}
       display='flex'
       position='relative'
       paddingBottom={2}

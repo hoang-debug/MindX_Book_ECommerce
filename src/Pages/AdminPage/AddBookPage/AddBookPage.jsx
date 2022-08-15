@@ -135,7 +135,7 @@ const AddBookPage = () => {
           <form onSubmit={submit}>
 
             <TextField
-              label='name'
+              label='Tiêu đề'
               variant="outlined"
               fullWidth
               // size='small'
@@ -145,7 +145,7 @@ const AddBookPage = () => {
             />
             <Box marginTop={1.5} />
             <TextField
-              label='author'
+              label='Tác giả'
               variant="outlined"
               fullWidth
               // size='small'
@@ -156,7 +156,7 @@ const AddBookPage = () => {
             <Box marginTop={1.5} />
 
             <TextField
-              label='publisher'
+              label='Nhà xuất bản'
               variant="outlined"
               fullWidth
               // size='small'
@@ -167,7 +167,7 @@ const AddBookPage = () => {
             <Box marginTop={1.5} />
 
             <TextField
-              label='publication_day'
+              label='Ngày xuất bản'
               variant="outlined"
               fullWidth
               // size='small'
@@ -178,7 +178,7 @@ const AddBookPage = () => {
             <Box marginTop={1.5} />
 
             <TextField
-              label='manufacturer'
+              label='Nhà sách'
               variant="outlined"
               fullWidth
               // size='small'
@@ -189,7 +189,7 @@ const AddBookPage = () => {
             <Box marginTop={1.5} />
 
             <TextField
-              label='price'
+              label='Giá tiền'
               variant="outlined"
               fullWidth
               // size='small'
@@ -201,7 +201,7 @@ const AddBookPage = () => {
             <Box marginTop={1.5} />
 
             <TextField
-              label='category'
+              label='Loại sách'
               variant="outlined"
               fullWidth
               // size='small'
@@ -220,7 +220,7 @@ const AddBookPage = () => {
             <Box marginTop={1.5} />
 
             <TextField
-              label='amount'
+              label='Số lượng'
               variant="outlined"
               fullWidth
               // size='small'
@@ -233,7 +233,7 @@ const AddBookPage = () => {
 
             <TextField
               variant="outlined"
-              label="description"
+              label="Mô tả"
               // size='small'
               fullWidth
               multiline
@@ -249,7 +249,7 @@ const AddBookPage = () => {
               type='submit'
               width='150px'
             >
-              Submit
+              Thêm sách
             </OrangeButton>
           </form>
 

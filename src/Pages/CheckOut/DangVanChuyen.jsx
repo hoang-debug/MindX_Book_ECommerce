@@ -7,7 +7,7 @@ import { CustomButton } from "../CustomComponent/CustomButton";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: theme.palette.grey[100]
+    backgroundColor: '#F4F3EC'
   },
   submitButton: {
     width: '200px',
@@ -78,7 +78,7 @@ const DangVanChuyen = (props) => {
               gutterBottom
             >
               {/* {isMBookShip ? '[Mbooks] ' : `[${props.username}] `} */}
-              Đang vận chuyển
+              Đặt hàng thành công
             </Typography>
 
           </Box>

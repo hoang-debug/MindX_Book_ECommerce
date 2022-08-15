@@ -23,12 +23,10 @@ const Signin = ({ _setUserInfo }) => {
         justifyContent='space-evenly'
       >
         <LoginBox _setUserInfo={_setUserInfo}/>
-        {/* <Box marginLeft={2}/>
-         */}
         <Divider flexItem orientation="vertical"/>
         <RegisterBox/>
       </Box>
-
+      <Box marginTop={10}/>
     </Box>
   )
 }

@@ -177,11 +177,11 @@ const UpdateBookPage = () => {
             />
             <Box marginLeft={2} />
             <OrangeButton width='150px' onClick={getData}>
-              Get data
+              Lấy dữ liệu
             </OrangeButton>
             <Box marginLeft={1} />
             <WhiteButton width='150px' onClick={deleteBook}>
-              Delete
+              Xóa
             </WhiteButton>
           </Box>
 
@@ -189,7 +189,7 @@ const UpdateBookPage = () => {
           <form onSubmit={submit}>
 
             <TextField
-              label='name'
+              label='Tiêu đề'
               variant="outlined"
               fullWidth
               // size='small'
@@ -199,7 +199,7 @@ const UpdateBookPage = () => {
             />
             <Box marginTop={1.5} />
             <TextField
-              label='author'
+              label='Tác giả'
               variant="outlined"
               fullWidth
               // size='small'
@@ -210,7 +210,7 @@ const UpdateBookPage = () => {
             <Box marginTop={1.5} />
 
             <TextField
-              label='publisher'
+              label='Nhà xuất bản'
               variant="outlined"
               fullWidth
               // size='small'
@@ -221,7 +221,7 @@ const UpdateBookPage = () => {
             <Box marginTop={1.5} />
 
             <TextField
-              label='publication_day'
+              label='Ngày xuất bản'
               variant="outlined"
               fullWidth
               // size='small'
@@ -232,7 +232,7 @@ const UpdateBookPage = () => {
             <Box marginTop={1.5} />
 
             <TextField
-              label='manufacturer'
+              label='Nhà sách'
               variant="outlined"
               fullWidth
               // size='small'
@@ -243,7 +243,7 @@ const UpdateBookPage = () => {
             <Box marginTop={1.5} />
 
             <TextField
-              label='price'
+              label='Giá'
               variant="outlined"
               fullWidth
               // size='small'
@@ -255,7 +255,7 @@ const UpdateBookPage = () => {
             <Box marginTop={1.5} />
 
             <TextField
-              label='category'
+              label='Thể loại'
               variant="outlined"
               fullWidth
               // size='small'
@@ -274,7 +274,7 @@ const UpdateBookPage = () => {
             <Box marginTop={1.5} />
 
             <TextField
-              label='amount'
+              label='Số lượng'
               variant="outlined"
               fullWidth
               // size='small'
@@ -287,7 +287,7 @@ const UpdateBookPage = () => {
 
             <TextField
               variant="outlined"
-              label="description"
+              label="Mô tả"
               // size='small'
               fullWidth
               multiline
@@ -303,7 +303,7 @@ const UpdateBookPage = () => {
               type='submit'
               width='150px'
             >
-              Submit
+              Cập nhật
             </OrangeButton>
           </form>
 

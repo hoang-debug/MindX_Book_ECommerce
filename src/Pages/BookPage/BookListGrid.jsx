@@ -3,13 +3,14 @@ import Book2 from "./Book2";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '90%',
+    width: '100%',
     // height: '40%',
     // backgroundColor: theme.palette.common.white,
     display: 'flex',
     flexDirection: 'column',
     marginTop: theme.spacing(5),
-    justifyContent: 'center'
+    justifyContent: 'center',
+    maxWidth: '1480px'
   },
   header: {
     display: 'flex',
@@ -23,8 +24,8 @@ const useStyles = makeStyles((theme) => ({
     // backgroundColor: theme.palette.grey[200],
     gap: theme.spacing(2),
     justifyContent: 'space-between',
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
+    // paddingLeft: theme.spacing(2),
+    // paddingRight: theme.spacing(2),
     marginTop: theme.spacing(2)
   },
 
@@ -49,7 +50,7 @@ const BookListGrid = (props) => {
   return (
     <div className={classes.root}>
       <Box className={classes.header} alignSelf={props.namePosition}>
-        <Typography gutterBottom variant="h5">
+        <Typography gutterBottom variant="h5" style={{fontWeight: 500, color: '#f28f40'}}>
           {(!props.loading && props.items.length === 0) ? `Không có ${props.listname} nào :(` : props.listname}
         </Typography>
       </Box>

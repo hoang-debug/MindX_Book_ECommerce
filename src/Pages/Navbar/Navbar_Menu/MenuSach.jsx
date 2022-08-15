@@ -154,7 +154,8 @@ const MenuSach = (props) => {
                 >
                   <Link key={index} to={`/book-page/${cv2.idCategory}`}>
                     <Typography
-                      variant="body2"
+                      variant="body1"
+                      // style={{fontWeight: '500'}}
                       className={cv2.idCategory === cateIdV2 ? classes.linkActive : classes.linkInActive}
                       onClick={onClickCategoryV2(cv2.idCategory)}
                     >
