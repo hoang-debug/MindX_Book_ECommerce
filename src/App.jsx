@@ -51,6 +51,7 @@ const App = () => {
   const [checkLogin, setCheckLogin] = useState(false);
 
   useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify([]));
     const checkLogin = async () => {
       let url = `${HEROKU_API}/auth/verify`;
       let response = await axiosGet(url, null, true);
@@ -58,6 +59,7 @@ const App = () => {
       if (response !== null && response.success) {
         setSignedIn(true);
         setUserInfo(response.data);
+        getCart();
       }
       setCheckLogin(true);
     };
@@ -70,16 +72,20 @@ const App = () => {
     setUserInfo(info);
     console.log("user info", userInfo);
     localStorage.setItem("access_token", info.token);
+    getCart();
+  };
+
+  const getCart = async data => {
     let response = await axiosGet(`${HEROKU_API}/cart`, null, true);
     let cart = [];
-    if (response.success)
+    if (response && response.success)
       cart = response.data.sellProducts.map(item => {
         return {
           book: item.book,
           qualityBook: item.qualityBook,
         };
       });
-    console.log("cart", cart);
+    console.log("cart", response);
     localStorage.setItem("cart", JSON.stringify(cart));
     setRefreshNavbar(prev => !prev);
   };

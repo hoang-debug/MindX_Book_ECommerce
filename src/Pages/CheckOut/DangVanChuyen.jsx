@@ -78,7 +78,7 @@ const DangVanChuyen = (props) => {
               gutterBottom
             >
               {/* {isMBookShip ? '[Mbooks] ' : `[${props.username}] `} */}
-              Đang vận chuyển
+              Đặt hàng thành công
             </Typography>
 
           </Box>
