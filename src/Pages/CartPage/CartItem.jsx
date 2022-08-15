@@ -39,12 +39,18 @@ const useStyles = makeStyles((theme) => ({
 const CartItem = (props) => {
   const classes = useStyles()
   const [details, setDetails] = useState(null)
-  const [amount, setAmount] = useState(1)
-  const isChangeAmount = useRef(false)
+  // const [amount, setAmount] = useState(1)
+  // const isChangeAmount = useRef(false)
   const changeAmount = (isAdd) => (event) => {
-    isChangeAmount.current = true
-    if (isAdd) setAmount(prev => prev + 1)
-    else if (amount > 0) setAmount(prev => prev - 1)
+    // isChangeAmount.current = true
+    if (isAdd) {
+      // setAmount(prev => prev + 1)
+      props.updateItem(props._id, props.quantity + 1)
+    }
+    else if (props.quantity > 0) {
+      // setAmount(prev => prev - 1)
+      props.updateItem(props._id, props.quantity - 1)
+    }
   }
 
   useEffect(() => {
@@ -67,15 +73,15 @@ const CartItem = (props) => {
     getData()
   }, [props._id])
 
-  useEffect(() => {
-    if (!isChangeAmount.current) return
-    isChangeAmount.current = false
-    props.updateItem(props._id, amount)
-  }, [amount])
+  // useEffect(() => {
+  //   if (!isChangeAmount.current) return
+  //   isChangeAmount.current = false
+  //   props.updateItem(props._id, amount)
+  // }, [amount])
 
-  useEffect(() => {
-    if (props.quantity) setAmount(props.quantity)
-  }, [props.quantity])
+  // useEffect(() => {
+  //   if (props.quantity) setAmount(props.quantity)
+  // }, [props.quantity])
 
   const navigate = useNavigate()
   const goToProductPage = () => {
@@ -118,7 +124,7 @@ const CartItem = (props) => {
               >
                 <IconButton className={classes.amountButton} onClick={changeAmount(true)}><AddBox></AddBox></IconButton>
                 <Box marginLeft={1} />
-                <Typography component='div'>{amount}</Typography>
+                <Typography component='div'>{props.quantity}</Typography>
                 <Box marginLeft={1} />
                 <IconButton className={classes.amountButton} onClick={changeAmount(false)}><IndeterminateCheckBox></IndeterminateCheckBox></IconButton>
                 {/* <ButtonGroup variant="text" size="small">
@@ -134,7 +140,7 @@ const CartItem = (props) => {
               justifyContent='space-between'
               alignItems='flex-end'
             >
-              <Typography align="right" variant="h6"><span className="cart-item-price">{`${numberWithCommas(details.price * amount)}đ`}</span></Typography>
+              <Typography align="right" variant="h6"><span className="cart-item-price">{`${numberWithCommas(details.price * props.quantity)}đ`}</span></Typography>
               <CustomButton variant="contained" backgroundColor='white' size="small" width='80px' onClick={props.deleteItem(props._id)}>Xóa</CustomButton>
             </Box>
           </Box>
