@@ -102,7 +102,7 @@ const CustomerRatings = (props) => {
           <Box display='flex'>
             <Typography>Số sao:</Typography>
             <Box marginLeft={1} />
-            <Rating precision={1} value={star} onChange={(e, value) => { setStar(value) }} />
+            <Rating precision={1} value={star} onChange={(e, value) => { if (value) setStar(value) }} />
             <Box marginLeft={1} />
             <Typography>({star})</Typography>
           </Box>

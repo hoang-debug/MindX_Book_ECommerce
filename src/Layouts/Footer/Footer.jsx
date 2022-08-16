@@ -1,11 +1,11 @@
 import { Box, Button, Divider, makeStyles, styled, Typography } from "@material-ui/core"
-import { Email, PhoneEnabled } from "@material-ui/icons"
+import { Check, Email, PhoneEnabled } from "@material-ui/icons"
 import { useEffect } from "react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { CustomButton } from "../../Pages/CustomComponent/CustomButton"
 import { OrangeButton } from "../../Pages/CustomComponent/OrangeButton"
 import { WhiteButton } from "../../Pages/CustomComponent/WhiteButton"
-const Footer = () => {
+const Footer = ({ signedIn }) => {
   const navigate = useNavigate()
 
   return (
@@ -60,13 +60,18 @@ const Footer = () => {
               <TypoNormal>Chính sách đổi trả hoàn tiền</TypoNormal>
               <TypoNormal>Phương thức vận chuyển</TypoNormal>
             </Box>
+
             <Box maxWidth='400px' minWidth='211px'>
               <TypoHeader>{'Bạn là thành viên Book&Chill?'}</TypoHeader>
               <Box marginTop={3} />
               <TypoNormal>Hãy đăng nhập để thưởng thức một cách trọn vẹn tất cả tác phẩm của chúng tôi.</TypoNormal>
               <Box marginTop={2} />
+              {signedIn ?
+                <TypoNormal>Bạn đã đăng nhập <Check/></TypoNormal>
+                :
+                <FooterButton onClick={() => navigate('/signin')} >Đăng nhập / Đăng ký</FooterButton>
+              }
 
-              <FooterButton onClick={()=>navigate('/signin')}>Đăng nhập / Đăng ký</FooterButton>
             </Box>
           </Box>
           <Box marginTop={6} />
@@ -109,7 +114,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const TypoLink = ({link, ...props}) => {
+const TypoLink = ({ link, ...props }) => {
   const classes = useStyles()
 
   return (

@@ -57,6 +57,7 @@ const BuyOrderPage = () => {
               _items={order.sellProducts}
               _totalBill={order.totalBill}
               _address={order.address}
+              _loading={loading}
             />
             <Box marginTop={2} />
           </Fragment>

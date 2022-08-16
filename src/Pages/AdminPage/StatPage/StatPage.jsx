@@ -181,10 +181,10 @@ const StatPage = () => {
           justifyContent='space-between'
           marginTop={4}
         >
-          <StatBox name='Đơn đặt hàng' value={numberWithCommas(report?.numberOfBills)} color={0} />
-          <StatBox name='Sách được bán' value={numberWithCommas(report?.numberOfBooks)} color={1} />
-          <StatBox name='Người mua' value={numberWithCommas(report?.numberOfBuyer)} color={2} />
-          <StatBox name='Doanh thu' value={`${numberWithCommas(report?.totalRevenue)}đ`} color={3} />
+          <StatBox name='Đơn đặt hàng' value={numberWithCommas(report?.numberOfBills) || 0} color={0} />
+          <StatBox name='Sách được bán' value={numberWithCommas(report?.numberOfBooks) || 0} color={1} />
+          <StatBox name='Người mua' value={numberWithCommas(report?.numberOfBuyer) || 0} color={2} />
+          <StatBox name='Doanh thu' value={`${numberWithCommas(report?.totalRevenue) || 0}đ`} color={3} />
         </Box>
 
         {revenueData &&

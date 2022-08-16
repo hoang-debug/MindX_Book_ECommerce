@@ -5,6 +5,7 @@ import { useState } from "react"
 import { BUY_STATUS, BUY_STATUS_VN, HEROKU_API } from "../../../Services/Constants"
 import { axiosGet, axiosPut } from "../../../Services/Ultils/axiosUtils"
 import { numberWithCommas } from "../../../Services/Ultils/NumberUtils"
+import Loading from "../../Loading"
 import OrderItem from "./OrderItem"
 
 
@@ -15,14 +16,16 @@ const Order = ({ _id, _status, _items, _totalBill, _address }) => {
     navigator.clipboard.writeText(_id);
   }
   const [status, setStatus] = useState(_status)
-
+  const [loading, setLoading] = useState(false)
   const confirm = async () => {
+    setLoading(true)
     let response = await axiosPut(`${HEROKU_API}/bill/${_id}`, {
       "status": status,
     }, true)
     console.log(response)
     if (!response || !response.success) return
     setHidden(true)
+    setLoading(false)
   }
   return (
     <>
@@ -122,7 +125,7 @@ const Order = ({ _id, _status, _items, _totalBill, _address }) => {
                 <Button
                   variant='contained'
                   color="primary"
-                  disabled={status === _status}
+                  disabled={status === _status || loading}
                   style={{ height: '40px', width: '100px' }}
                   onClick={confirm}
                 >
@@ -134,6 +137,7 @@ const Order = ({ _id, _status, _items, _totalBill, _address }) => {
           </Box>
         </Box>
       }
+      {loading && <Loading></Loading>}
     </>
   )
 }
