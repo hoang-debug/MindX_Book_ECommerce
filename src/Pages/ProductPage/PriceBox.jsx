@@ -45,7 +45,7 @@ function TransitionRight(props) {
   )
 }
 
-const PriceBox = ({ smallImages, price, setRefreshNavbar, maxAmount, userInfo, setLoading }) => {
+const PriceBox = ({ smallImages, price, setRefreshNavbar, maxAmount, userInfo, loading, setLoading }) => {
   const classes = useStyles()
   const [amount, setAmount] = useState(1)
   const [buyable, setBuyable] = useState(false)
@@ -169,7 +169,7 @@ const PriceBox = ({ smallImages, price, setRefreshNavbar, maxAmount, userInfo, s
         marginTop={2}
       >
         {/* <Button color='primary' variant="contained" fullWidth onClick={addToCart} disabled={amount === 0}>Thêm vào giỏ hàng</Button> */}
-        <CustomButton backgroundColor='yellow' borderRadius='round' variant="contained" fullWidth onClick={addToCart} disabled={!buyable}>Thêm vào giỏ hàng</CustomButton>
+        <CustomButton backgroundColor='yellow' borderRadius='round' variant="contained" fullWidth onClick={addToCart} disabled={!buyable || loading}>Thêm vào giỏ hàng</CustomButton>
         <Box marginTop={1}></Box>
 
         {/* <Button color='secondary' variant="contained" fullWidth disabled={amount === 0}>Mua ngay</Button> */}
