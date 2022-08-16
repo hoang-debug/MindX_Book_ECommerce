@@ -194,6 +194,7 @@ const ProductPage = (props) => {
                 maxAmount={data.amount}
                 userInfo={props.userInfo}
                 setLoading={setLoading}
+                loading={loading}
               />
 
             </Box>

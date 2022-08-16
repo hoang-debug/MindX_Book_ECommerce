@@ -53,17 +53,7 @@ const item = {
 
 // const items = new Array(3).fill(item)
 
-const book = {
-  title: 'Harry Potter and the Philosopher Stone',
-  newprice: '$9.99',
-  oldprice: '$11.11',
-  src: 'https://i2-prod.walesonline.co.uk/incoming/article6890072.ece/ALTERNATES/s615b/hp1.jpg',
-  author: 'JK Rowling',
-  stars: '4.6',
-  votes: '20.000',
-}
 
-const booklist = Array(4).fill(book)
 
 const Cart = (props) => {
   const classes = useStyles()
@@ -169,6 +159,7 @@ const Cart = (props) => {
               deleteItem={deleteItem}
               updateItem={updateItem}
               calcSubtotal={calcSubTotal}
+              loading={loading}
             />
           ))}
           <Box display='flex' justifyContent='flex-end' marginTop={2} paddingRight={2}>
@@ -183,10 +174,8 @@ const Cart = (props) => {
             <Box className={classes.subTotal} height='80px' display='flex' flexDirection='column' justifyContent='space-between' padding={3}>
               <Typography variant="body1" style={{ fontWeight: 400 }}>{`Tổng (${items.length} sản phẩm):`} <b>{numberWithCommas(subtotal)}đ</b></Typography>
               <Box boxSizing='border-box' width="100%">
-                {/* <Button fullWidth variant="contained" color='primary' style={{ backgroundColor: '#FFD714' }}>
-              <span style={{ color: '#000' }}>Thanh toán</span>
-            </Button> */}
-                <CustomButton fullWidth variant="contained" backgroundColor='yellow' onClick={checkOut}>Thanh toán</CustomButton>
+                <CustomButton fullWidth variant="contained" backgroundColor='yellow' onClick={checkOut}
+                disabled={loading}>Thanh toán</CustomButton>
               </Box>
             </Box>
             {/* <Box className={classes.youMayLike} height={500} padding={2} marginTop={2} >

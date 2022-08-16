@@ -123,11 +123,19 @@ const CartItem = (props) => {
                 display='flex'
                 alignItems='center'
               >
-                <IconButton className={classes.amountButton} onClick={changeAmount(true)}><AddBox></AddBox></IconButton>
+                <IconButton 
+                  className={classes.amountButton} 
+                  onClick={changeAmount(true)}
+                  disabled={props.loading}
+                ><AddBox></AddBox></IconButton>
                 <Box marginLeft={1} />
                 <Typography component='div'>{props.quantity}</Typography>
                 <Box marginLeft={1} />
-                <IconButton className={classes.amountButton} onClick={changeAmount(false)}><IndeterminateCheckBox></IndeterminateCheckBox></IconButton>
+                <IconButton 
+                  className={classes.amountButton} 
+                  onClick={changeAmount(false)}
+                  disabled={props.loading}
+                ><IndeterminateCheckBox></IndeterminateCheckBox></IconButton>
                 {/* <ButtonGroup variant="text" size="small">
               <Button color="primary" className={classes.functionButton} variant>Xóa</Button>
               <Button color="primary" className={classes.functionButton}>Save for later</Button>
@@ -142,7 +150,7 @@ const CartItem = (props) => {
               alignItems='flex-end'
             >
               <Typography align="right" variant="h6"><span className="cart-item-price">{`${numberWithCommas(details.price * props.quantity)}đ`}</span></Typography>
-              <CustomButton variant="contained" backgroundColor='white' size="small" width='80px' onClick={props.deleteItem(props._id)}>Xóa</CustomButton>
+              <CustomButton variant="contained" backgroundColor='white' size="small" width='80px' onClick={props.deleteItem(props._id)} disabled={props.loading}>Xóa</CustomButton>
             </Box>
           </Box>
           <Divider />

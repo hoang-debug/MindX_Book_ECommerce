@@ -316,7 +316,7 @@ const ShipAddress = (props) => {
               </Box>
               <Box marginTop={2} />
               {!update &&
-                <CustomButton size='small' type="submit" backgroundColor="yellow" variant="contained" className={classes.submitButton}>Giao đến địa chỉ này</CustomButton>
+                <CustomButton size='small' type="submit" backgroundColor="yellow" variant="contained" className={classes.submitButton} disabled={loading}>Giao đến địa chỉ này</CustomButton>
               }
 
               {update &&
