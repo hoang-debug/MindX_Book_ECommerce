@@ -15,6 +15,13 @@ const RegisterBox = () => {
   const [password2, setPassword2] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+  const resetState = () => {
+    setUsername('')
+    setEmail('')
+    setPassword('')
+    setPassword2('')
+    setError('')
+  }
   const login = async (e) => {
     e.preventDefault()
     let response = await axiosPost(`${HEROKU_API}/auth/register`, {
@@ -27,6 +34,7 @@ const RegisterBox = () => {
     else {
       setError('')
       setSuccess(true)
+      resetState()
     }
     console.log(response)
   }

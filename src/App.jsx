@@ -136,7 +136,7 @@ const App = () => {
           </Routes>
 
           <Box flexGrow={1} display='flex' alignItems='end'>
-            <Footer />
+            <Footer signedIn={signedIn}/>
           </Box>
         </div>
       }

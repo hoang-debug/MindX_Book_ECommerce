@@ -51,8 +51,9 @@ const UpdateBookPage = () => {
   const [openAlert, setOpenAlert] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
   const [alertSuccess, setAlertSuccess] = useState(false)
-
+  // const [resetKey, setResetKey] = useState(true)
   const resetState = () => {
+    setId('')
     setName('')
     setAuthor('')
     setPublisher('')
@@ -111,6 +112,7 @@ const UpdateBookPage = () => {
     else {
       setAlertMessage('Update thành công')
       setAlertSuccess(true)
+      resetState()
     }
 
   }
@@ -124,7 +126,7 @@ const UpdateBookPage = () => {
     }
     else {
       let data = response.data
-      setAmount(data.amoun || 0)
+      setAmount(data.amount || 0)
       setAuthor(data.author || '')
       setCategory(data.category || '')
       setDesciption(data.description || '')
@@ -146,6 +148,7 @@ const UpdateBookPage = () => {
     } else {
       setAlertMessage('Xoá thành công')
       setAlertSuccess(true)
+      resetState()
     }
   }
 

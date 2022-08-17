@@ -111,7 +111,7 @@ const HomePage = () => {
         )
       })}
 
-      {!lineData.length &&
+      {!lineData.length && !loading &&
         <>
           <Box marginTop={4}/>
           <Typography variant='h5' style={{fontWeight: 500}}>Không có sách nào :(</Typography>
