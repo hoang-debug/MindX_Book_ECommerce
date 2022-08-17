@@ -134,7 +134,7 @@ const CartItem = (props) => {
                 <IconButton 
                   className={classes.amountButton} 
                   onClick={changeAmount(false)}
-                  disabled={props.loading}
+                  disabled={props.loading || props.quantity === 0}
                 ><IndeterminateCheckBox></IndeterminateCheckBox></IconButton>
                 {/* <ButtonGroup variant="text" size="small">
               <Button color="primary" className={classes.functionButton} variant>Xóa</Button>
